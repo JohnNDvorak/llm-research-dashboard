@@ -1,0 +1,72 @@
+# LLM Research Dashboard - Python Dependencies
+# See PROJECT_PLAN.md for detailed technology specifications
+
+# ==============================================================================
+# Core Framework
+# ==============================================================================
+streamlit>=1.31.0
+pandas>=2.0.0
+sqlalchemy>=2.0.0
+
+# ==============================================================================
+# LLM Providers
+# ==============================================================================
+# Primary: xAI grok-4-fast-reasoning (OpenAI-compatible) + embeddings
+openai>=1.12.0
+
+# Fallback Providers
+anthropic>=0.18.0
+google-generativeai>=0.3.0
+together>=1.0.0
+groq>=0.4.0
+
+# ==============================================================================
+# Vector Search & Embeddings
+# ==============================================================================
+chromadb>=0.4.20
+sentence-transformers>=2.3.0  # Optional: local embeddings
+scikit-learn>=1.3.0  # For t-SNE, UMAP clustering
+umap-learn>=0.5.5  # Dimensionality reduction for viz
+numpy>=1.24.0
+
+# ==============================================================================
+# Data Sources
+# ==============================================================================
+arxiv>=2.0.0
+tweepy>=4.14.0
+huggingface-hub>=0.20.0
+
+# LinkedIn Integration
+linkedin-api>=2.2.0  # Unofficial LinkedIn API
+playwright>=1.40.0  # For web scraping fallback
+beautifulsoup4>=4.12.0  # HTML parsing
+
+# ==============================================================================
+# Utilities
+# ==============================================================================
+python-dotenv>=1.0.0
+pyyaml>=6.0
+loguru>=0.7.0
+schedule>=1.2.0
+requests>=2.31.0
+
+# ==============================================================================
+# Visualization
+# ==============================================================================
+plotly>=5.18.0
+matplotlib>=3.8.0
+
+# ==============================================================================
+# Testing
+# ==============================================================================
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+pytest-playwright>=0.4.0  # Test LinkedIn scraping
+
+# ==============================================================================
+# Optional (for production features)
+# ==============================================================================
+sendgrid>=6.11.0  # Email notifications
+python-docx>=1.1.0  # Export to Word
+reportlab>=4.0.0  # PDF generation
