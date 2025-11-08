@@ -1,0 +1,22 @@
+[
+  {
+    "id": "arxiv_2501.12345",
+    "title": "Efficient Fine-Tuning with Direct Preference Optimization",
+    "authors": ["Jane Doe", "John Smith"],
+    "abstract": "We introduce a novel approach to preference optimization that eliminates the need for explicit reward modeling. Our method, Direct Preference Optimization (DPO), achieves 20% better performance on alignment tasks compared to traditional RLHF.",
+    "url": "https://arxiv.org/abs/2501.12345",
+    "source": "arxiv",
+    "published_date": "2025-01-15",
+    "expected_stages": ["Post-Training", "Evaluation"]
+  },
+  {
+    "id": "arxiv_2501.67890",
+    "title": "Scaling Laws for Large Language Model Training",
+    "authors": ["Alice Johnson"],
+    "abstract": "We investigate the relationship between model size, dataset size, and compute budget for training large language models. Our findings suggest optimal allocation strategies for resource-constrained training.",
+    "url": "https://arxiv.org/abs/2501.67890",
+    "source": "arxiv",
+    "published_date": "2025-01-10",
+    "expected_stages": ["Pre-Training", "Data Preparation"]
+  }
+]
