@@ -77,10 +77,11 @@ class TestVectorStoreOperations:
             pytest.fail(f"add_paper should accept these parameters: {e}")
 
     def test_add_paper_with_empty_metadata(self):
-        """Test add_paper with empty metadata."""
+        """Test add_paper with minimal metadata."""
         store = VectorStore()
         embedding = [0.1] * 1536
-        store.add_paper("arxiv:2401.00001", embedding, {})
+        # ChromaDB requires non-empty metadata
+        store.add_paper("arxiv:2401.00001", embedding, {"title": "Test Paper"})
 
     def test_add_paper_with_rich_metadata(self):
         """Test add_paper with rich metadata."""

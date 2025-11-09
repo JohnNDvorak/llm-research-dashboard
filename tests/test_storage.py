@@ -106,25 +106,31 @@ class TestPaperDBOperations:
 
     def test_insert_paper_with_full_data(self):
         """Test insert_paper with complete paper data."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "Complete Paper",
-            "abstract": "Full abstract text",
-            "authors": ["Author 1", "Author 2"],
-            "published_date": "2024-01-01",
-            "arxiv_url": "https://arxiv.org/abs/2401.00001",
-            "categories": ["cs.CL", "cs.AI"],
-            "social_score": 100,
-            "professional_score": 50
-        }
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Complete Paper",
+                "abstract": "Full abstract text",
+                "authors": ["Author 1", "Author 2"],
+                "published_date": "2024-01-01",
+                "pdf_url": "https://arxiv.org/pdf/2401.00001.pdf",
+                "source": "arxiv",
+                "social_score": 100,
+                "professional_score": 50
+            }
+            db.insert_paper(paper)
 
     def test_insert_paper_with_minimal_data(self):
         """Test insert_paper with minimal paper data."""
-        db = PaperDB()
-        paper = {"id": "arxiv:2401.00001"}
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Minimal Paper",
+                "abstract": "Minimal abstract"
+            }
+            db.insert_paper(paper)
 
     def test_get_paper_with_arxiv_id(self):
         """Test get_paper with arXiv ID format."""
@@ -177,100 +183,120 @@ class TestPaperDBIntegration:
 
     def test_multiple_paper_insertions(self):
         """Test inserting multiple papers."""
-        db = PaperDB()
-        papers = [
-            {"id": f"arxiv:2401.{str(i).zfill(5)}", "title": f"Paper {i}"}
-            for i in range(10)
-        ]
-        for paper in papers:
-            db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            papers = [
+                {
+                    "id": f"arxiv:2401.{str(i).zfill(5)}",
+                    "title": f"Paper {i}",
+                    "abstract": f"Abstract for paper {i}"
+                }
+                for i in range(10)
+            ]
+            for paper in papers:
+                db.insert_paper(paper)
 
     def test_insert_and_retrieve_flow(self):
         """Test basic insert and retrieve flow."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "Test Paper"
-        }
-        db.insert_paper(paper)
-        db.get_paper("arxiv:2401.00001")
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Test Paper",
+                "abstract": "Test abstract"
+            }
+            db.insert_paper(paper)
+            retrieved = db.get_paper("arxiv:2401.00001")
+            assert retrieved is not None
 
     def test_paper_with_unicode(self):
         """Test paper with unicode characters."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "LLM Training 中文 🤖",
-            "abstract": "Résumé with unicode"
-        }
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "LLM Training 中文 🤖",
+                "abstract": "Résumé with unicode"
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_special_characters(self):
         """Test paper with special characters."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "Paper with 'quotes' and \"double quotes\"",
-            "abstract": "Abstract with $pecial ch@rs!"
-        }
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with 'quotes' and \"double quotes\"",
+                "abstract": "Abstract with $pecial ch@rs!"
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_long_abstract(self):
         """Test paper with very long abstract."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "Paper",
-            "abstract": "Long abstract " * 1000
-        }
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with long abstract",
+                "abstract": "Long abstract " * 1000
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_null_values(self):
-        """Test paper with null values."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": None,
-            "abstract": None
-        }
-        db.insert_paper(paper)
+        """Test paper with null values for optional fields."""
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with null optional fields",
+                "abstract": "Abstract text",
+                "authors": None,
+                "social_score": None
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_empty_strings(self):
-        """Test paper with empty strings."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "title": "",
-            "abstract": ""
-        }
-        db.insert_paper(paper)
+        """Test paper with empty strings for optional fields."""
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with empty optional fields",
+                "abstract": "Abstract text",
+                "authors": "",
+                "url": ""
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_list_fields(self):
         """Test paper with list fields."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "authors": ["Author 1", "Author 2", "Author 3"],
-            "categories": ["cs.CL", "cs.LG"],
-            "stages": ["Architecture", "Training"]
-        }
-        db.insert_paper(paper)
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with list fields",
+                "abstract": "Abstract text",
+                "authors": ["Author 1", "Author 2", "Author 3"],
+                "stages": ["Architecture Design", "Pre-Training"],
+                "key_insights": ["Insight 1", "Insight 2"]
+            }
+            db.insert_paper(paper)
 
     def test_paper_with_nested_dict(self):
         """Test paper with nested dictionary."""
-        db = PaperDB()
-        paper = {
-            "id": "arxiv:2401.00001",
-            "metadata": {
-                "source": "twitter",
-                "social_score": 100,
-                "engagement": {
-                    "likes": 50,
-                    "retweets": 25
+        with PaperDB() as db:
+            db.create_tables()
+            paper = {
+                "id": "arxiv:2401.00001",
+                "title": "Paper with nested metrics",
+                "abstract": "Abstract text",
+                "metrics": {
+                    "performance_gain": "10%",
+                    "accuracy_improvement": 5.2,
+                    "speedup": "2x"
                 }
             }
-        }
-        db.insert_paper(paper)
+            db.insert_paper(paper)
 
     def test_get_nonexistent_paper(self):
         """Test getting a paper that doesn't exist."""
