@@ -1,0 +1,305 @@
+# Pipeline Stages Configuration
+# Based on 2025 Smol Training Playbook (Hugging Face)
+# See: https://huggingface.co/blog/smollm-training-2025
+
+stages:
+  - name: "Architecture Design"
+    description: "Model architecture, attention mechanisms, and hyperparameters"
+    keywords:
+      # Attention mechanisms
+      - "attention"
+      - "multi-head attention"
+      - "MHA"
+      - "grouped query attention"
+      - "GQA"
+      - "multi-query attention"
+      - "MQA"
+      - "multi-latent attention"
+      - "MLA"
+      - "flash attention"
+
+      # Positional embeddings
+      - "positional embedding"
+      - "RoPE"
+      - "rotary position"
+      - "NoPE"
+      - "ALiBi"
+      - "SWA"
+      - "sliding window"
+
+      # Architecture types
+      - "transformer"
+      - "mixture of experts"
+      - "MoE"
+      - "hybrid model"
+
+      # Components
+      - "tokenizer"
+      - "vocabulary"
+      - "optimizer"
+      - "hyperparameter"
+      - "activation function"
+      - "normalization"
+
+  - name: "Data Preparation"
+    description: "Dataset curation, cleaning, mixing, and preprocessing"
+    keywords:
+      # Data operations
+      - "dataset"
+      - "data curation"
+      - "data mixing"
+      - "data cleaning"
+      - "deduplication"
+      - "data augmentation"
+      - "data filtering"
+
+      # Scaling and composition
+      - "scaling law"
+      - "data composition"
+      - "curriculum learning"
+      - "data balancing"
+
+      # Specialized data
+      - "multilingual"
+      - "code data"
+      - "domain-specific"
+      - "synthetic data"
+      - "instruction data"
+
+  - name: "Pre-Training"
+    description: "Large-scale training on raw corpora"
+    keywords:
+      # Training process
+      - "pre-training"
+      - "pretraining"
+      - "language modeling"
+      - "next token prediction"
+      - "causal language model"
+
+      # Scale
+      - "large-scale training"
+      - "distributed training"
+      - "training corpus"
+
+      # Stability & optimization
+      - "training stability"
+      - "loss spike"
+      - "gradient clipping"
+      - "learning rate schedule"
+      - "warmup"
+
+      # Context
+      - "long context"
+      - "context length"
+      - "sequence length"
+
+      # Performance
+      - "throughput"
+      - "tokens per second"
+      - "training efficiency"
+
+  - name: "Post-Training"
+    description: "Fine-tuning and alignment (2025 focus area)"
+    keywords:
+      # Fine-tuning
+      - "fine-tuning"
+      - "finetuning"
+      - "supervised fine-tuning"
+      - "SFT"
+      - "instruction tuning"
+
+      # Preference optimization (HOT in 2025!)
+      - "DPO"
+      - "direct preference optimization"
+      - "ORPO"
+      - "odds ratio preference optimization"
+      - "GRPO"
+      - "group relative policy optimization"
+      - "KTO"
+      - "kahneman-tversky optimization"
+
+      # RLHF
+      - "RLHF"
+      - "reinforcement learning"
+      - "reward model"
+      - "PPO"
+      - "proximal policy optimization"
+
+      # Alignment
+      - "alignment"
+      - "human feedback"
+      - "preference learning"
+
+      # Task-specific
+      - "math reasoning"
+      - "code generation"
+      - "tool use"
+      - "function calling"
+
+      # Techniques
+      - "LoRA"
+      - "QLoRA"
+      - "parameter-efficient"
+      - "PEFT"
+      - "adapter"
+      - "intradocument masking"
+
+  - name: "Evaluation and Benchmarking"
+    description: "Testing, metrics, and performance analysis"
+    keywords:
+      # Benchmarks
+      - "benchmark"
+      - "evaluation"
+      - "MMLU"
+      - "GSM8K"
+      - "HumanEval"
+      - "MBPP"
+      - "TruthfulQA"
+      - "HellaSwag"
+
+      # Metrics
+      - "perplexity"
+      - "accuracy"
+      - "F1 score"
+      - "BLEU"
+      - "ROUGE"
+
+      # Testing
+      - "ablation study"
+      - "baseline comparison"
+      - "performance analysis"
+      - "model comparison"
+
+      # Quality
+      - "safety evaluation"
+      - "toxicity"
+      - "bias"
+      - "factuality"
+
+  - name: "Infrastructure and Scaling"
+    description: "Hardware, distributed systems, and orchestration"
+    keywords:
+      # Hardware
+      - "GPU"
+      - "TPU"
+      - "H100"
+      - "A100"
+      - "cluster"
+
+      # Distributed training
+      - "distributed"
+      - "multi-node"
+      - "data parallel"
+      - "tensor parallel"
+      - "pipeline parallel"
+      - "FSDP"
+      - "fully sharded"
+      - "DeepSpeed"
+      - "Megatron"
+
+      # Communication
+      - "communication"
+      - "bandwidth"
+      - "latency"
+      - "interconnect"
+      - "NVLink"
+      - "InfiniBand"
+
+      # Storage
+      - "storage"
+      - "S3"
+      - "checkpointing"
+      - "checkpoint"
+
+      # Orchestration
+      - "SLURM"
+      - "Kubernetes"
+      - "orchestration"
+      - "job scheduling"
+
+  - name: "Deployment and Inference"
+    description: "Production deployment, optimization, and serving"
+    keywords:
+      # Optimization
+      - "quantization"
+      - "INT8"
+      - "INT4"
+      - "GPTQ"
+      - "AWQ"
+      - "compression"
+      - "pruning"
+      - "distillation"
+      - "knowledge distillation"
+
+      # Inference
+      - "inference"
+      - "serving"
+      - "deployment"
+      - "production"
+
+      # Speed
+      - "latency"
+      - "throughput"
+      - "batching"
+      - "continuous batching"
+
+      # Techniques
+      - "model merging"
+      - "SLERP"
+      - "task arithmetic"
+      - "speculative decoding"
+      - "KV cache"
+
+      # Frameworks
+      - "vLLM"
+      - "TensorRT"
+      - "ONNX"
+      - "TGI"
+      - "text generation inference"
+
+  - name: "Other/Emerging"
+    description: "Cross-cutting topics, agents, multimodal, and novel 2025 trends"
+    keywords:
+      # Agents
+      - "agent"
+      - "autonomous"
+      - "ReAct"
+      - "chain of thought"
+      - "CoT"
+      - "tree of thought"
+
+      # Multimodal
+      - "multimodal"
+      - "vision"
+      - "image"
+      - "video"
+      - "audio"
+      - "speech"
+
+      # Novel architectures
+      - "mamba"
+      - "state space"
+      - "SSM"
+      - "recurrent"
+      - "RWKV"
+
+      # Applications
+      - "retrieval"
+      - "RAG"
+      - "search"
+      - "summarization"
+      - "translation"
+
+      # Ethics & safety
+      - "ethics"
+      - "safety"
+      - "interpretability"
+      - "explainability"
+      - "transparency"
+
+      # Emerging 2025 topics
+      - "test-time compute"
+      - "o1-style reasoning"
+      - "search-based reasoning"
+      - "mixture of depths"
+      - "sparse activation"

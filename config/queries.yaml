@@ -1,0 +1,207 @@
+# Search Queries Configuration
+# Queries for arXiv, Twitter, and LinkedIn data sources
+
+arxiv:
+  # Search queries (combined with OR)
+  queries:
+    # General LLM training
+    - "large language model training"
+    - "LLM training"
+    - "transformer training"
+
+    # Architecture (Stage 1)
+    - "attention mechanism"
+    - "grouped query attention"
+    - "mixture of experts"
+    - "MoE architecture"
+
+    # Data & Pre-training (Stages 2-3)
+    - "pre-training corpus"
+    - "training data"
+    - "scaling laws"
+
+    # Post-training (Stage 4 - 2025 FOCUS!)
+    - "DPO"
+    - "direct preference optimization"
+    - "RLHF"
+    - "preference optimization"
+    - "ORPO"
+    - "fine-tuning"
+    - "instruction tuning"
+
+    # Evaluation (Stage 5)
+    - "LLM benchmark"
+    - "language model evaluation"
+
+    # Infrastructure (Stage 6)
+    - "distributed training"
+    - "GPU training"
+
+    # Deployment (Stage 7)
+    - "model quantization"
+    - "LLM inference"
+    - "model compression"
+
+  # Filters
+  categories:
+    - "cs.CL"  # Computation and Language
+    - "cs.LG"  # Machine Learning
+    - "cs.AI"  # Artificial Intelligence
+
+  # Date filtering
+  date_range:
+    start: "2024-01-01"  # Papers from 2024 onwards (2025 focus)
+    end: null  # No end date (ongoing)
+
+  # Limits
+  max_results_per_query: 100
+  max_total_results: 500
+
+  # Rate limiting
+  rate_limit_delay: 3  # Seconds between requests (arXiv requirement)
+  max_requests_per_minute: 20
+
+twitter:
+  # Accounts to track (AI labs, researchers, institutions)
+  tracked_accounts:
+    # Major AI labs
+    - "@huggingface"
+    - "@AnthropicAI"
+    - "@OpenAI"
+    - "@GoogleAI"
+    - "@GoogleDeepMind"
+    - "@MetaAI"
+    - "@MistralAI"
+    - "@CohereAI"
+
+    # Universities & research
+    - "@StanfordAILab"
+    - "@berkeley_ai"
+    - "@MIT_CSAIL"
+    - "@cmu_ml"
+
+    # Influential researchers
+    - "@karpathy"
+    - "@ylecun"
+    - "@goodfellow_ian"
+    - "@AnimaAnandkumar"
+
+  # Hashtags to track
+  hashtags:
+    - "#LLM"
+    - "#LargeLanguageModels"
+    - "#MachineLearning"
+    - "#AIResearch"
+    - "#NLP"
+    - "#DeepLearning"
+    - "#TransformerModels"
+    - "#RLHF"
+    - "#DPO"
+
+  # Keywords in tweets (must contain arXiv link)
+  keywords:
+    - "arXiv"
+    - "paper"
+    - "research"
+    - "published"
+
+  # Social metrics thresholds
+  min_likes: 10
+  min_retweets: 5
+
+  # Rate limiting
+  max_tweets_per_day: 1000
+  rate_limit_delay: 2  # Seconds between requests
+
+linkedin:
+  # Companies to track
+  tracked_companies:
+    - "OpenAI"
+    - "Anthropic"
+    - "Google DeepMind"
+    - "Meta AI"
+    - "Microsoft Research"
+    - "Hugging Face"
+    - "Cohere"
+    - "Mistral AI"
+    - "Stability AI"
+    - "NVIDIA"
+
+  # Research labs
+  tracked_organizations:
+    - "Stanford University"
+    - "MIT CSAIL"
+    - "UC Berkeley"
+    - "Carnegie Mellon University"
+
+  # Hashtags
+  hashtags:
+    - "LLM"
+    - "MachineLearning"
+    - "AIResearch"
+    - "ArtificialIntelligence"
+    - "DeepLearning"
+    - "NaturalLanguageProcessing"
+    - "GenerativeAI"
+
+  # Keywords in posts (must mention research/paper)
+  keywords:
+    - "paper"
+    - "research"
+    - "published"
+    - "arXiv"
+    - "preprint"
+    - "model"
+    - "training"
+
+  # Professional score calculation
+  # score = (likes * 1) + (comments * 3) + (shares * 5)
+  score_weights:
+    likes: 1
+    comments: 3
+    shares: 5
+
+  # Engagement thresholds
+  min_likes: 5
+  min_engagement_score: 20
+
+  # Rate limiting (IMPORTANT: avoid blocking!)
+  rate_limit_delay: 5  # Seconds between requests
+  max_posts_per_day: 100
+  max_requests_per_hour: 50
+
+  # Scraping settings (if using web scraping)
+  scraping:
+    user_agent_rotation: true
+    headless: true
+    max_scroll_depth: 10
+    wait_time_seconds: 2
+
+# Deduplication settings
+deduplication:
+  # Primary deduplication: arXiv ID
+  use_arxiv_id: true
+
+  # Secondary: title similarity
+  title_similarity_threshold: 0.90  # Levenshtein ratio
+
+  # Merge strategy when duplicate found across sources
+  merge_strategy:
+    # Keep highest social score
+    social_score: "max"
+    # Keep highest professional score
+    professional_score: "max"
+    # Combine sources
+    sources: "merge"  # e.g., ["arxiv", "twitter", "linkedin"]
+
+# Scheduling
+schedule:
+  # Daily fetch times (UTC)
+  daily_fetch_time: "06:00"  # 6 AM UTC
+
+  # Weekly trend scan
+  weekly_scan_day: "sunday"
+  weekly_scan_time: "08:00"
+
+  # Re-fetch social metrics
+  social_update_interval_hours: 24

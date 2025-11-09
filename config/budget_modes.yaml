@@ -1,0 +1,151 @@
+# Budget Modes Configuration
+# Three operating modes: cheap, balanced, quality
+# Switch modes to optimize for cost vs quality
+
+modes:
+  cheap:
+    description: "Minimum cost mode - uses cheapest providers"
+
+    # LLM settings
+    llm_provider: "together"
+    llm_model: "glm-4-9b-chat"
+
+    # Embedding settings
+    embedding_provider: "local"
+    embedding_model: "all-MiniLM-L6-v2"
+
+    # Budget limits
+    daily_limit_usd: 0.50
+    monthly_limit_usd: 10.00
+
+    # Data source limits
+    max_papers_per_day: 500
+
+    # Processing
+    batch_size: 100
+    max_concurrent_requests: 5
+
+    # Estimated costs (1000 papers/day)
+    estimated_cost_per_1000_papers: 2.00
+    estimated_monthly_cost: 6.00
+
+  balanced:
+    description: "Recommended mode - good balance of cost and quality"
+
+    # LLM settings
+    llm_provider: "xai"
+    llm_model: "grok-4-fast-reasoning"
+
+    # Embedding settings
+    embedding_provider: "openai"
+    embedding_model: "text-embedding-3-small"
+
+    # Budget limits
+    daily_limit_usd: 1.00
+    monthly_limit_usd: 20.00
+
+    # Data source limits
+    max_papers_per_day: 1000
+
+    # Processing
+    batch_size: 50
+    max_concurrent_requests: 10
+
+    # Estimated costs (1000 papers/day)
+    estimated_cost_per_1000_papers: 0.50
+    estimated_monthly_cost: 15.00
+
+  quality:
+    description: "Maximum quality mode - uses best models"
+
+    # LLM settings
+    llm_provider: "xai"
+    llm_model: "grok-4-fast-reasoning"
+
+    # Use premium model for complex papers
+    use_premium_for_complex: true
+    premium_provider: "together"
+    premium_model: "qwen3-235b-thinking"
+    complexity_threshold: 0.8  # Top 20% complexity
+
+    # Embedding settings
+    embedding_provider: "voyage"
+    embedding_model: "voyage-2"
+
+    # Budget limits
+    daily_limit_usd: 5.00
+    monthly_limit_usd: 100.00
+
+    # Data source limits
+    max_papers_per_day: 2000
+
+    # Processing
+    batch_size: 25
+    max_concurrent_requests: 15
+
+    # Quality assurance
+    enable_claude_validation: true  # 5% random sample
+    validation_sample_rate: 0.05
+
+    # Estimated costs (1000 papers/day)
+    estimated_cost_per_1000_papers: 2.00
+    estimated_monthly_cost: 60.00
+
+# Auto-switching rules
+auto_switch:
+  # Switch to cheap mode if budget exceeded
+  enable_auto_downgrade: true
+  downgrade_threshold_percent: 90  # Switch at 90% of budget
+
+  # Switch back to balanced when budget resets
+  enable_auto_upgrade: true
+  upgrade_on_new_day: true
+
+# Alerts
+alerts:
+  # Email alerts when switching modes
+  notify_on_mode_change: true
+
+  # Slack webhook alerts
+  slack_webhook_on_mode_change: false
+
+  # Budget alerts
+  budget_warning_thresholds:
+    - 50  # 50% of daily budget
+    - 80  # 80% of daily budget
+    - 95  # 95% of daily budget
+
+# Cost tracking
+tracking:
+  # Log all costs to database
+  log_all_costs: true
+
+  # Daily cost reports
+  daily_report: true
+  daily_report_time: "23:00"  # UTC
+
+  # Weekly summary
+  weekly_summary: true
+  weekly_summary_day: "monday"
+
+  # Break down by component
+  track_by_component:
+    - "llm_analysis"
+    - "embeddings"
+    - "twitter_api"
+    - "linkedin_scraping"
+
+# Mode recommendations
+recommendations:
+  # Recommend mode based on usage patterns
+  auto_recommend: true
+
+  # Switch to cheap mode during low activity
+  off_peak_mode: "cheap"
+  off_peak_hours:
+    start: "00:00"  # Midnight UTC
+    end: "06:00"    # 6 AM UTC
+
+  # Use quality mode for important papers
+  high_social_score_threshold: 100
+  high_social_score_mode: "quality"

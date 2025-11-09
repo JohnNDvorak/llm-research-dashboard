@@ -1,0 +1,106 @@
+# Vector Embedding Configuration
+# Primary: OpenAI text-embedding-3-small (best cost/quality)
+
+primary_provider: "openai"
+primary_model: "text-embedding-3-small"
+
+providers:
+  openai:
+    base_url: "https://api.openai.com/v1"
+    api_key_env: "OPENAI_API_KEY"
+    models:
+      text-embedding-3-small:
+        dimensions: 1536
+        cost_per_million_tokens: 0.02
+        max_batch_size: 100
+        max_input_length: 8191
+        recommended_use: "Primary embedding model - best cost/quality"
+        timeout: 30
+
+      text-embedding-3-large:
+        dimensions: 3072
+        cost_per_million_tokens: 0.13
+        max_batch_size: 100
+        max_input_length: 8191
+        recommended_use: "Higher quality, more expensive"
+        timeout: 30
+
+  voyage:
+    base_url: "https://api.voyageai.com/v1"
+    api_key_env: "VOYAGE_API_KEY"
+    models:
+      voyage-2:
+        dimensions: 1024
+        cost_per_million_tokens: 0.10
+        max_batch_size: 128
+        max_input_length: 4000
+        recommended_use: "Better quality for domain-specific search"
+        timeout: 30
+
+      voyage-code-2:
+        dimensions: 1536
+        cost_per_million_tokens: 0.10
+        max_batch_size: 128
+        max_input_length: 16000
+        recommended_use: "Optimized for code-heavy papers"
+        timeout: 30
+
+  local:
+    # No API required - runs locally
+    models:
+      all-MiniLM-L6-v2:
+        dimensions: 384
+        cost_per_million_tokens: 0.0
+        max_batch_size: 32
+        max_input_length: 512
+        recommended_use: "Free, local embeddings (slower)"
+        model_name: "sentence-transformers/all-MiniLM-L6-v2"
+        device: "cpu"  # or "cuda" if GPU available
+
+      all-mpnet-base-v2:
+        dimensions: 768
+        cost_per_million_tokens: 0.0
+        max_batch_size: 32
+        max_input_length: 512
+        recommended_use: "Better quality local embeddings"
+        model_name: "sentence-transformers/all-mpnet-base-v2"
+        device: "cpu"
+
+# Embedding generation settings
+generation:
+  # Input format: "{title} [SEP] {abstract} [SEP] {key_insights}"
+  input_template: "{title} [SEP] {abstract} [SEP] {key_insights}"
+
+  # Batch processing
+  batch_size: 100
+  max_retries: 3
+  retry_delay_seconds: 5
+
+  # Caching
+  cache_embeddings: true
+  skip_existing: true  # Don't regenerate if embedding already exists
+
+# ChromaDB settings
+chromadb:
+  collection_name: "llm_papers"
+  persist_directory: "data/chroma"
+
+  # Distance metrics
+  distance_metric: "cosine"  # cosine, l2, or ip (inner product)
+
+  # Indexing
+  hnsw_space: "cosine"
+  hnsw_construction_ef: 200
+  hnsw_search_ef: 100
+
+# Similarity search settings
+similarity:
+  default_n_results: 10
+  min_similarity_threshold: 0.7  # 0.0 to 1.0 (cosine similarity)
+  max_results: 50
+
+# Budget controls
+budget:
+  daily_limit_usd: 0.10
+  monthly_limit_usd: 3.00
+  alert_threshold_percent: 80

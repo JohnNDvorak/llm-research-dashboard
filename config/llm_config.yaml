@@ -1,0 +1,138 @@
+# LLM Provider Configuration
+# Primary provider: xAI grok-4-fast-reasoning (best cost/quality/speed ratio)
+# Fallbacks: Together AI models
+
+primary_provider: "xai"
+primary_model: "grok-4-fast-reasoning"
+
+providers:
+  xai:
+    base_url: "https://api.x.ai/v1"
+    api_key_env: "XAI_API_KEY"
+    models:
+      grok-4-fast-reasoning:
+        cost_per_million_input: 0.20
+        cost_per_million_output: 0.50
+        max_tokens: 128000
+        recommended_use: "95% of all papers - primary workhorse"
+        timeout: 30
+
+  together:
+    base_url: "https://api.together.xyz/v1"
+    api_key_env: "TOGETHER_API_KEY"
+    models:
+      glm-4-9b-chat:
+        full_name: "THUDM/glm-4-9b-chat"
+        cost_per_million_input: 0.20
+        cost_per_million_output: 0.20
+        max_tokens: 32000
+        recommended_use: "Emergency fallback for rate limits"
+        timeout: 30
+
+      deepseek-v3:
+        full_name: "deepseek-ai/deepseek-v3"
+        cost_per_million_input: 0.27
+        cost_per_million_output: 1.10
+        max_tokens: 64000
+        recommended_use: "Quality fallback if xAI has errors"
+        timeout: 45
+
+      qwen3-235b-thinking:
+        full_name: "Qwen/Qwen3-235B-A22B-Thinking-2507-FP8"
+        cost_per_million_input: 1.80
+        cost_per_million_output: 1.80
+        max_tokens: 32000
+        recommended_use: "Premium tier for extremely complex papers (top 5%)"
+        timeout: 60
+
+  openai:
+    base_url: "https://api.openai.com/v1"
+    api_key_env: "OPENAI_API_KEY"
+    models:
+      gpt-4o-mini:
+        cost_per_million_input: 0.15
+        cost_per_million_output: 0.60
+        max_tokens: 128000
+        recommended_use: "Reliable backup"
+        timeout: 30
+
+  anthropic:
+    base_url: "https://api.anthropic.com/v1"
+    api_key_env: "ANTHROPIC_API_KEY"
+    models:
+      claude-3-5-haiku-20241022:
+        cost_per_million_input: 1.00
+        cost_per_million_output: 5.00
+        max_tokens: 200000
+        recommended_use: "Quality validation (5% random sample)"
+        timeout: 45
+
+  google:
+    base_url: "https://generativelanguage.googleapis.com/v1beta"
+    api_key_env: "GOOGLE_API_KEY"
+    models:
+      gemini-1.5-flash:
+        cost_per_million_input: 0.075
+        cost_per_million_output: 0.30
+        max_tokens: 1000000
+        recommended_use: "Speed fallback for simple papers"
+        timeout: 30
+
+  groq:
+    base_url: "https://api.groq.com/openai/v1"
+    api_key_env: "GROQ_API_KEY"
+    models:
+      llama-3.1-70b-versatile:
+        cost_per_million_input: 0.59
+        cost_per_million_output: 0.79
+        max_tokens: 32000
+        recommended_use: "Ultra-fast bulk processing"
+        timeout: 15
+
+# Fallback rules - automatic switching on failures
+fallback_rules:
+  - condition: "rate_limit"
+    provider: "together"
+    model: "glm-4-9b-chat"
+    reason: "Cheapest option for rate limit situations"
+
+  - condition: "error"
+    provider: "together"
+    model: "deepseek-v3"
+    reason: "Reliable alternative if xAI has issues"
+
+  - condition: "timeout"
+    provider: "google"
+    model: "gemini-1.5-flash"
+    reason: "Fast model for timeout recovery"
+
+# Complexity-based routing
+complexity_thresholds:
+  simple:
+    max_abstract_length: 500
+    provider: "xai"
+    model: "grok-4-fast-reasoning"
+
+  medium:
+    max_abstract_length: 2000
+    provider: "xai"
+    model: "grok-4-fast-reasoning"
+
+  complex:
+    max_abstract_length: 999999
+    provider: "together"
+    model: "qwen3-235b-thinking"
+
+# Rate limiting
+rate_limits:
+  max_concurrent_requests: 10
+  retry_attempts: 3
+  retry_delay_seconds: 5
+  exponential_backoff: true
+
+# Budget controls
+budget:
+  daily_limit_usd: 1.00
+  monthly_limit_usd: 20.00
+  alert_threshold_percent: 80
+  auto_switch_to_cheap_mode: true
