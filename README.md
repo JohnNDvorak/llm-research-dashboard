@@ -7,7 +7,7 @@ Automated system for discovering, analyzing, and organizing LLM research papers 
 **Purpose:** Help researchers stay current with LLM research by automatically categorizing papers into pipeline stages, providing semantic search, and tracking professional/social impact.
 
 **Key Features:**
-- 📚 **Multi-source data fetching:** arXiv, Twitter, LinkedIn
+- 📚 **Multi-source data fetching:** arXiv, X (formerly Twitter), LinkedIn
 - 🤖 **AI-powered analysis:** xAI grok-4-fast-reasoning for paper categorization
 - 🔍 **Semantic search:** OpenAI embeddings + ChromaDB vector database
 - 📊 **8 Pipeline stages:** Architecture, Data Prep, Pre-Training, Post-Training, Evaluation, Infrastructure, Deployment, Emerging
@@ -21,7 +21,7 @@ Automated system for discovering, analyzing, and organizing LLM research papers 
 - **Vector DB:** ChromaDB
 - **Database:** SQLite
 - **Dashboard:** Streamlit
-- **Data Sources:** arXiv API, Twitter API, LinkedIn
+- **Data Sources:** arXiv API, X API (formerly Twitter), LinkedIn
 
 ## Project Status
 

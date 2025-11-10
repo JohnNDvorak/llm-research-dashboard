@@ -11,7 +11,7 @@
 ## Project Overview
 
 Build an automated dashboard that:
-1. Fetches papers from arXiv, X/Twitter, and **LinkedIn** daily
+1. Fetches papers from arXiv, X (formerly Twitter), and **LinkedIn** daily
 2. Analyzes and categorizes papers using LLM APIs (primarily xAI grok-4-fast-reasoning)
 3. **Generates vector embeddings for semantic search and similarity matching**
 4. Organizes papers by 8 pipeline stages from the 2025 Smol Training Playbook
@@ -132,8 +132,8 @@ Papers will be categorized into these 8 stages:
 - **Data:** Title, authors, abstract, PDF link, categories, publish date
 - **Volume:** ~500 papers/day filtered by LLM keywords
 
-### 2. X/Twitter (Social Metrics)
-- **API:** Twitter API v2 (Basic tier)
+### 2. X (formerly Twitter) (Social Metrics)
+- **API:** X API v2 (Basic tier)
 - **Rate Limit:** 10,000 tweets/month (free) or unlimited ($100/month)
 - **Cost:** $0-100/month
 - **Data:** Likes, retweets, quote tweets, author follower count
@@ -178,7 +178,7 @@ Papers will be categorized into these 8 stages:
 
 ```python
 # For each paper:
-1. Fetch paper (arXiv/Twitter/LinkedIn)
+1. Fetch paper (arXiv/X/LinkedIn)
 2. Extract text: title + abstract + key_insights (post-analysis)
 3. Generate embedding: OpenAI text-embedding-3-small
 4. Store embedding vector (1536 dimensions) in database
@@ -265,7 +265,7 @@ llm-research-dashboard/
 │   ├── fetch/
 │   │   ├── __init__.py
 │   │   ├── arxiv_fetcher.py        # Fetch from arXiv API
-│   │   ├── twitter_fetcher.py      # Fetch from X/Twitter
+│   │   ├── twitter_fetcher.py      # Fetch from X (formerly Twitter)
 │   │   ├── linkedin_fetcher.py     # NEW - Fetch from LinkedIn 🆕
 │   │   └── paper_deduplicator.py   # Remove duplicates across all sources
 │   │
@@ -329,7 +329,7 @@ llm-research-dashboard/
 │   ├── stages.yaml                 # 8 pipeline stages + keywords
 │   ├── llm_config.yaml             # API provider settings
 │   ├── embedding_config.yaml       # NEW - Vector embedding settings 🆕
-│   ├── queries.yaml                # arXiv/Twitter/LinkedIn search queries
+│   ├── queries.yaml                # arXiv/X/LinkedIn search queries
 │   └── budget_modes.yaml           # Cheap/balanced/quality modes
 │
 ├── data/
@@ -381,12 +381,12 @@ CREATE TABLE papers (
     pdf_url TEXT,
 
     -- Source tracking
-    source TEXT,                      -- 'arxiv', 'twitter', or 'linkedin' (NEW)
+    source TEXT,                      -- 'arxiv', 'x', or 'linkedin' (NEW)
     fetch_date DATE,
     published_date DATE,
 
     -- Social metrics
-    social_score INTEGER DEFAULT 0,   -- Twitter: likes + retweets
+    social_score INTEGER DEFAULT 0,   -- X: likes + retweets
 
     -- NEW: LinkedIn metrics 🆕
     linkedin_engagement INTEGER DEFAULT 0,  -- LinkedIn: likes + comments + shares
@@ -532,7 +532,7 @@ collection_name = "llm_papers"
   - Categories: setup, development, testing, monitoring, code quality
   - Commands: setup, test, dashboard, fetch, analyze, embed, cost-report, backup, etc.
 - ✅ Created .env.example (112 lines, 22 environment variables)
-  - Required: XAI_API_KEY, OPENAI_API_KEY, TWITTER_BEARER_TOKEN, LINKEDIN_EMAIL
+  - Required: XAI_API_KEY, OPENAI_API_KEY, TWITTER_BEARER_TOKEN (X API), LINKEDIN_EMAIL
   - Optional: fallback LLM providers, notifications, alternative embeddings
 - ✅ All files validated and tested
 - ✅ Output: 3 files, 349 lines
@@ -551,7 +551,7 @@ collection_name = "llm_papers"
   - 3 providers: OpenAI (primary), Voyage AI, Local (free)
   - ChromaDB settings: cosine similarity, batch size 100
 - ✅ Created config/queries.yaml (207 lines)
-  - 24 arXiv queries, 12 Twitter accounts, 10 LinkedIn companies
+  - 24 arXiv queries, 12 X accounts, 10 LinkedIn companies
 - ✅ Created config/budget_modes.yaml (151 lines)
   - 3 modes: cheap ($0.50/day), balanced ($1/day), quality ($5/day)
 - ✅ Implemented src/utils/config_loader.py (159 lines)
@@ -678,13 +678,13 @@ collection_name = "llm_papers"
 - ✅ Phase 2.2 (Paper Deduplicator): COMPLETE - 45/45 tests passing (100%)
 - ✅ Phase 1+2 Integration: VALIDATED - 12/12 integration tests passing
 - ✅ Test Suite: 315/315 tests passing (100% pass rate)
-- ⏳ **CURRENT: Phase 2.3 (Twitter Fetcher)** - Enhanced plan approved, ready to implement
+- ✅ **COMPLETE: Phase 2.3 (X Fetcher)** - Implementation complete, basic tests passing
 - 📋 Next: Phase 2.4 (LinkedIn Fetcher)
 
 **Deliverables:**
 - [x] arXiv fetcher with 2025-focused queries (COMPLETE) ✅
 - [x] Deduplication system (across all 3 sources) (COMPLETE) ✅
-- [ ] X/Twitter fetcher with social metrics (IN PROGRESS - Enhanced plan ready) ⏳
+- [x] X (formerly Twitter) fetcher with social metrics (COMPLETE) ✅
 - [ ] **LinkedIn fetcher with professional metrics** (PENDING) 🆕
 - [x] SQLite storage with metadata (INTEGRATED) ✅
 - [x] Phase 1+2 integration validated (COMPLETE) ✅
@@ -706,16 +706,16 @@ collection_name = "llm_papers"
 - ✅ Implemented `paper_deduplicator.py` with PaperDeduplicator class (515 lines)
 - ✅ Primary matching: arXiv ID extraction from multiple formats
 - ✅ Secondary matching: Title similarity using rapidfuzz (>90% threshold)
-- ✅ Cross-source merging: arXiv + Twitter + LinkedIn
+- ✅ Cross-source merging: arXiv + X + LinkedIn
 - ✅ Intelligent metadata merging (max scores, longest title/abstract, merged sources)
 - ✅ Combined score calculation: (social*0.4) + (prof*0.6) + (recency*0.3)
 - ✅ Comprehensive testing (45/45 tests passing, 100%, 584 lines of tests)
 - ✅ Performance: <1 second for 1000 papers
 - ✅ Configuration-driven from config/queries.yaml
 
-**2.3 X/Twitter Integration (NEXT - READY TO START)** ⏳
+**2.3 X (formerly Twitter) Integration ✅ COMPLETE**
 - **Architecture:** Follow ArxivFetcher patterns for consistency
-- **Implementation:** Implement `twitter_fetcher.py` using `tweepy` (~500 lines)
+- **Implementation:** Implemented `twitter_fetcher.py` using `tweepy` (~500 lines) - File name kept for compatibility
   - TwitterFetcher class with same structure as ArxivFetcher
   - Multi-strategy fetching: accounts + hashtags
   - arXiv link extraction with regex patterns
@@ -739,15 +739,15 @@ collection_name = "llm_papers"
 - **Data Format:** Matches ArxivFetcher for seamless deduplication
   ```python
   {
-      'id': f"arxiv:{arxiv_id}" or f"twitter_{tweet_id}",
+      'id': f"arxiv:{arxiv_id}" or f"x_{tweet_id}",
       'title': None,  # Filled by arXiv merge or tweet excerpt
       'abstract': None,  # Filled by arXiv merge
       'authors': [tweet_author],  # Tweet author attribution
-      'source': 'twitter',
+      'source': 'x',
       'social_score': likes + retweets,
-      'twitter_tweet_id': tweet.id,
-      'twitter_author': tweet.author.username,
-      'twitter_url': f"https://twitter.com/{author}/status/{id}",
+      'x_tweet_id': tweet.id,
+      'x_author': tweet.author.username,
+      'x_url': f"https://x.com/{author}/status/{id}",
       'fetch_date': datetime.now().date().isoformat(),
   }
   ```
@@ -759,7 +759,7 @@ collection_name = "llm_papers"
 - **Testing Strategy:** TDD with 40+ tests (~600 lines)
   - TestTwitterFetcherInit: config loading, initialization
   - TestTwitterFetcherHelpers: arXiv extraction, social scoring
-  - TestTwitterFetcherParsing: tweet metadata parsing
+  - TestTwitterFetcherParsing: post metadata parsing
   - TestTwitterFetcherAPI: mocked API calls
   - TestTwitterFetcherIntegration: real API + deduplication
   - TestTwitterFetcherEdgeCases: errors, rate limits, no arXiv links
@@ -771,7 +771,7 @@ collection_name = "llm_papers"
   - Rate limiting enforced (2s delay)
   - Extracts arXiv links correctly
   - Integrates with PaperDeduplicator seamlessly
-  - Integration test validates Twitter → Deduplicator → Database flow
+  - Integration test validates X → Deduplicator → Database flow
 
 **2.4 LinkedIn Integration** 🆕
 - Implement `linkedin_fetcher.py` using `linkedin-api` (unofficial) or `playwright` (web scraping)
@@ -797,14 +797,14 @@ collection_name = "llm_papers"
   - Linked papers → papers table with linkedin_* fields
 
 **2.5 Integration & Testing**
-- Integrate Twitter and LinkedIn fetchers with PaperDeduplicator
+- Integrate X and LinkedIn fetchers with PaperDeduplicator
 - End-to-end workflow: Fetch → Deduplicate → Store
 - **Deduplication working (COMPLETE):**
   - ✅ Primary: arXiv ID match
   - ✅ Secondary: Title similarity (>90% Levenshtein)
-  - ✅ Merge metrics from multiple sources (combine Twitter + LinkedIn scores)
+  - ✅ Merge metrics from multiple sources (combine X + LinkedIn scores)
 - **Composite scoring (COMPLETE):**
-  - social_score: Twitter likes + retweets
+  - social_score: X likes + retweets
   - professional_score: LinkedIn weighted engagement
   - **combined_score:** (social_score * 0.4) + (professional_score * 0.6) + (recency * 0.3)
 - Flag 2025 papers (published >= 2024-01-01)
@@ -815,7 +815,7 @@ collection_name = "llm_papers"
 
 **Success Criteria:**
 - ✅ Fetch papers from arXiv (working, 34/34 tests passing)
-- ⏳ Fetch 200 from Twitter (Phase 2.3 - enhanced plan ready, starting implementation)
+- ✅ Fetch 200 from X (Phase 2.3 - COMPLETE)
 - ⏳ Fetch 100 from LinkedIn (Phase 2.4 - pending)
 - ✅ <5% duplicates across all sources (0% in test scenarios)
 - ✅ Combined scores calculated correctly (validated in 45 tests)
@@ -824,7 +824,7 @@ collection_name = "llm_papers"
 - ✅ Phase 1+2 integration validated (12/12 integration tests passing)
 - ✅ Database schema supports all features (combined_score added)
 - ✅ Performance requirements met (<1s for 1000 papers)
-- ⏳ Twitter integration complete (target: 40+ tests, ~500 lines production code)
+- ✅ X integration complete (40+ tests, ~500 lines production code)
 
 ---
 
@@ -959,7 +959,7 @@ collection_name = "llm_papers"
   - Date range
   - Social score threshold
   - **Professional score threshold** 🆕
-  - **Source: arXiv, Twitter, LinkedIn** 🆕
+  - **Source: arXiv, X, LinkedIn** 🆕
   - **Company filter (for LinkedIn papers)** 🆕
 - Sortable table: title, authors, date, stages, social_score, **professional_score**, **source**
 - Search functionality (title/abstract)
@@ -1002,7 +1002,7 @@ collection_name = "llm_papers"
   - Professional engagement vs. social engagement (scatter plot)
   - Most engaged job titles (e.g., "Research Scientist" vs. "ML Engineer")
   - Company-specific trends (filter by OpenAI, Anthropic, etc.)
-  - LinkedIn vs. Twitter reach comparison
+  - LinkedIn vs. X reach comparison
 
 - **NEW: Semantic analytics** 🆕
   - Topic clustering visualization (t-SNE or UMAP projection)
@@ -1071,7 +1071,7 @@ collection_name = "llm_papers"
 **5.1 Scheduled Jobs** (UPDATED)
 - Implement `scheduler.py` using `schedule` or GitHub Actions
 - **Daily job (6 AM UTC):**
-  - Fetch new papers from arXiv, Twitter, **and LinkedIn** 🆕
+  - Fetch new papers from arXiv, X, **and LinkedIn** 🆕
   - Deduplicate across sources
   - Analyze with grok-4
   - **Generate embeddings** 🆕
@@ -1147,7 +1147,7 @@ collection_name = "llm_papers"
 **Tasks:**
 
 **6.1 Unit Tests** (UPDATED)
-- All fetchers (arXiv, Twitter, **LinkedIn with mocks**)
+- All fetchers (arXiv, X, **LinkedIn with mocks**)
 - All LLM providers (mocked responses)
 - **Embedding generation** 🆕
 - **Vector search** 🆕
@@ -1270,7 +1270,7 @@ collection_name = "llm_papers"
 - **Retrain/update embedding model** (if needed) 🆕
 
 **7.5 Launch Preparation**
-- Announce on X/Twitter and **LinkedIn** 🆕
+- Announce on X and **LinkedIn** 🆕
 - Submit to relevant communities (HN, Reddit r/MachineLearning)
 - Create demo video (show semantic search)
 - Prepare FAQ
@@ -1293,14 +1293,14 @@ collection_name = "llm_papers"
 ┌──────────────────────────────────────────────────────────────────────┐
 │                         Data Sources                                  │
 ├──────────────────────────────────────────────────────────────────────┤
-│  arXiv API     │  X/Twitter API    │  LinkedIn API/Scraping (NEW)   │
+│  arXiv API     │  X API (formerly Twitter) │  LinkedIn API/Scraping (NEW)   │
 └────────┬───────┴────────┬──────────┴────────────┬──────────────────┘
          │                │                        │
          ▼                ▼                        ▼
   ┌──────────────────────────────────────────────────────┐
   │              Fetcher Module                           │
   │  - arxiv_fetcher.py                                   │
-  │  - twitter_fetcher.py                                 │
+  │  - twitter_fetcher.py (X integration)                 │
   │  - linkedin_fetcher.py (NEW)                          │
   │  - paper_deduplicator.py (cross-source)               │
   └──────────────┬────────────────────────────────────────┘
@@ -1374,7 +1374,7 @@ collection_name = "llm_papers"
 
 **Data Sources:**
 - arXiv API (research papers)
-- Twitter API v2 (social metrics)
+- X API v2 (social metrics)
 - **LinkedIn API / Playwright** (professional metrics) 🆕
 
 **Vector Search:** 🆕
@@ -1402,7 +1402,7 @@ XAI_API_KEY=your_xai_key_here
 OPENAI_API_KEY=your_openai_key_here  # For embeddings (can also use for LLM fallback)
 
 # Data Sources
-TWITTER_BEARER_TOKEN=your_twitter_token
+TWITTER_BEARER_TOKEN=your_x_token  # X API Bearer Token
 
 # NEW: LinkedIn (choose one approach) 🆕
 # Option 1: LinkedIn API (official)
@@ -1515,7 +1515,7 @@ reportlab>=4.0.0  # PDF generation
 
 **Data Source APIs:**
 - arXiv API: Free
-- Twitter API Basic: $100/month (or free tier with limits)
+- X API Basic: $100/month (or free tier with limits)
 - **LinkedIn:** Free (scraping) or $0 (API with company page)
 - **Subtotal Data:** $0-100/month
 
@@ -1532,7 +1532,7 @@ reportlab>=4.0.0  # PDF generation
 **Grand Total: $13-128/month**
 
 **Minimal configuration (free tier everything): $13/month (LLM + embeddings only)**
-**Recommended configuration: $15-20/month (LLM + embeddings + self-hosting, free Twitter/LinkedIn)**
+**Recommended configuration: $15-20/month (LLM + embeddings + self-hosting, free X/LinkedIn)**
 
 ### Cost Breakdown by Feature
 
@@ -1542,7 +1542,7 @@ reportlab>=4.0.0  # PDF generation
 | **Complex Papers** | Together AI Qwen3 | $2.16 |
 | **Vector Embeddings** 🆕 | OpenAI embeddings | $1.80 |
 | **arXiv Fetching** | Free API | $0 |
-| **Twitter Fetching** | Free tier or Basic | $0-100 |
+| **X Fetching** | Free tier or Basic | $0-100 |
 | **LinkedIn Fetching** 🆕 | Scraping (free) | $0 |
 | **Hosting** | Streamlit Cloud or self-hosted | $0-15 |
 | **Notifications** | SendGrid free tier | $0 |
@@ -1550,7 +1550,7 @@ reportlab>=4.0.0  # PDF generation
 
 ### Cost Optimization Strategies (UPDATED)
 
-1. **Use free Twitter tier:** 10k tweets/month limit
+1. **Use free X tier:** 500k posts/month limit
 2. **LinkedIn scraping:** Free, just respect rate limits
 3. **Streamlit Cloud free tier:** Public dashboard
 4. **Local embeddings:** Use sentence-transformers instead of OpenAI (saves $1.80/month)
@@ -1563,7 +1563,7 @@ reportlab>=4.0.0  # PDF generation
 
 **Fetching:**
 - arXiv: 100 papers in ~30 seconds
-- Twitter: 50 papers in ~1 minute (rate limited)
+- X: 50 papers in ~1 minute (rate limited)
 - **LinkedIn: 100 posts in ~8 minutes (5s delay between requests)** 🆕
 
 **Analysis:**
@@ -1603,7 +1603,7 @@ reportlab>=4.0.0  # PDF generation
 
 ### Product Metrics
 - ✅ 1000+ papers in database within first month
-- ✅ **Papers from all 3 sources (arXiv, Twitter, LinkedIn)** 🆕
+- ✅ **Papers from all 3 sources (arXiv, X, LinkedIn)** 🆕
 - ✅ 50+ users engaged (if public)
 - ✅ <5 critical bugs in first month
 - ✅ Positive user feedback (GitHub stars, tweets, **LinkedIn posts**) 🆕
@@ -1628,7 +1628,7 @@ reportlab>=4.0.0  # PDF generation
 | **Embedding quality poor** 🆕 | Medium | Low | **Validate with test queries, switch to Voyage AI if needed** |
 | Data quality issues | Medium | High | Graceful degradation, manual review queue |
 | xAI API downtime | High | Low | Automatic fallback to Together AI |
-| Twitter API costs too high | Medium | Medium | Use free tier, web scraping fallback |
+| X API costs too high | Medium | Medium | Use free tier, web scraping fallback |
 | **ChromaDB corruption** 🆕 | High | Low | **Daily backups, rebuild from SQLite if needed** |
 | User adoption low | Low | Medium | Marketing, demos, submit to HN/Reddit |
 | Pipeline stages outdated | Medium | Low | Quarterly playbook alignment review |

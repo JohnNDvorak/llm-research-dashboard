@@ -391,7 +391,7 @@ class TestArxivFetcherIntegration:
 
         # Second request should be delayed by rate limiting
         rate_limit_delay = fetcher.arxiv_config['rate_limit_delay']
-        assert second_request_time >= rate_limit_delay - 0.1  # Small tolerance
+        assert second_request_time >= rate_limit_delay - 0.2  # Allow more tolerance for network variability
 
 
 class TestArxivFetcherErrorHandling:

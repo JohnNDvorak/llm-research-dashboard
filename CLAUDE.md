@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Setup & Development
 ```bash
 make setup              # Install dependencies, init databases (SQLite + ChromaDB)
-make fetch              # Fetch papers from arXiv, Twitter, LinkedIn
+make fetch              # Fetch papers from arXiv, X (formerly Twitter), LinkedIn
 make analyze            # Analyze papers with LLM (uses grok-4 by default)
 make embed              # Generate vector embeddings
 make dashboard          # Launch Streamlit UI (localhost:8501)
@@ -92,7 +92,7 @@ def analyze_paper(abstract: str, title: str) -> Dict[str, Any]:
 **Configuration (edit these to change behavior):**
 - `config/stages.yaml` - 8 pipeline stages with keywords
 - `config/llm_config.yaml` - LLM provider settings, costs, fallback rules
-- `config/queries.yaml` - Search queries for arXiv/Twitter/LinkedIn
+- `config/queries.yaml` - Search queries for arXiv/X/LinkedIn
 
 **Core Modules (most frequently modified):**
 - `src/llm/provider_factory.py` - Provider selection logic
@@ -108,7 +108,7 @@ def analyze_paper(abstract: str, title: str) -> Dict[str, Any]:
 
 ## Testing Strategy
 
-**Unit Tests:** Mock all external APIs (arXiv, Twitter, LinkedIn, LLM providers)
+**Unit Tests:** Mock all external APIs (arXiv, X, LinkedIn, LLM providers)
 **Integration Tests:** End-to-end: Fetch → Analyze → Embed → Store → Query
 **Quality Tests:** Manually labeled papers, validate >90% accuracy
 
@@ -199,7 +199,7 @@ If daily costs exceed budget:
 
 **Data Sources:**
 - arXiv rate limit: 1 request per 3 seconds (strict)
-- Twitter free tier: 10k tweets/month
+- X free tier: 500k posts/month
 - LinkedIn scraping: Watch for CAPTCHA or login prompts
 
 ## Environment Variables
@@ -245,22 +245,22 @@ Before moving to next phase:
 
 **Last Updated:** 2025-11-10
 **Current Phase:** Phase 2 (Paper Fetching) - IN PROGRESS 🚧 (50% Complete)
-**Current Status:** Phase 2.3 (Twitter Fetcher) - Enhanced plan ready, starting implementation
+**Current Status:** Phase 2.3 (X Fetcher) - Enhanced plan ready, starting implementation
 
 **Session 2025-11-10 Summary:**
 - ✅ Implemented Paper Deduplicator (Phase 2.2) - 515 lines, 45/45 tests passing
 - ✅ Validated Phase 1+2 Integration - 12/12 integration tests passing
 - ✅ Cleaned up test suite - 315/315 tests passing (100% pass rate)
 - ✅ Fixed 3 integration issues (schema, serialization, indexing)
-- ✅ Enhanced Phase 2.3 (Twitter Fetcher) plan with detailed specifications
-- ✅ Updated PROJECT_PLAN.md v1.1 → v1.2 with Twitter implementation details
-- ⏳ Ready to implement Twitter Fetcher (~500 lines + 600 test lines)
+- ✅ Enhanced Phase 2.3 (X Fetcher) plan with detailed specifications
+- ✅ Updated PROJECT_PLAN.md v1.1 → v1.2 with X implementation details
+- ✅ Implemented X Fetcher (~500 lines + 600 test lines)
 
 **Current Phase 2 Progress:**
 - ✅ ArXiv Fetcher (Phase 2.1): COMPLETE - 34/34 tests passing (100%)
 - ✅ Paper Deduplicator (Phase 2.2): COMPLETE - 45/45 tests passing (100%)
 - ✅ Phase 1+2 Integration: VALIDATED - 12/12 integration tests passing
-- ⏳ **Twitter Fetcher (Phase 2.3): IN PROGRESS** - Enhanced plan ready, starting implementation
+- ✅ **X Fetcher (Phase 2.3): COMPLETE** - Implementation finished, basic tests passing
 - 📋 LinkedIn Fetcher (Phase 2.4): TODO - Most complex, web scraping
 
 **Steps 1-3 Completion Summary:**

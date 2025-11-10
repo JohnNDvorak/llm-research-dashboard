@@ -20,7 +20,7 @@ help:
 	@echo ""
 	@echo "Development:"
 	@echo "  make dashboard          Launch Streamlit UI (localhost:8501)"
-	@echo "  make fetch              Fetch papers from arXiv, Twitter, LinkedIn"
+	@echo "  make fetch              Fetch papers from arXiv, X (formerly Twitter), LinkedIn"
 	@echo "  make analyze            Analyze papers with LLM (uses grok-4 by default)"
 	@echo "  make embed              Generate vector embeddings"
 	@echo ""
@@ -83,7 +83,7 @@ dashboard:
 
 ## fetch: Fetch papers from all sources
 fetch:
-	@echo "Fetching papers from arXiv, Twitter, and LinkedIn..."
+	@echo "Fetching papers from arXiv, X, and LinkedIn..."
 	@python scripts/fetch_daily.sh
 
 ## analyze: Analyze papers with LLM
