@@ -25,6 +25,9 @@ CREATE TABLE IF NOT EXISTS papers (
     linkedin_post_url TEXT,
     professional_score INTEGER DEFAULT 0,
 
+    -- Combined scoring (calculated by PaperDeduplicator)
+    combined_score FLOAT,  -- Formula: (social*0.4) + (prof*0.6) + (recency*0.3)
+
     -- Analysis results
     analyzed BOOLEAN DEFAULT 0,
     stages TEXT,  -- JSON array of assigned stages
@@ -85,6 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_papers_fetch_date ON papers(fetch_date);
 CREATE INDEX IF NOT EXISTS idx_papers_analyzed ON papers(analyzed);
 CREATE INDEX IF NOT EXISTS idx_papers_social_score ON papers(social_score);
 CREATE INDEX IF NOT EXISTS idx_papers_professional_score ON papers(professional_score);
+CREATE INDEX IF NOT EXISTS idx_papers_combined_score ON papers(combined_score);
 CREATE INDEX IF NOT EXISTS idx_papers_source ON papers(source);
 CREATE INDEX IF NOT EXISTS idx_papers_chroma_id ON papers(chroma_id);
 CREATE INDEX IF NOT EXISTS idx_cost_tracking_provider ON cost_tracking(provider);

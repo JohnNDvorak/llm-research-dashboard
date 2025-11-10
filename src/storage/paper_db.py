@@ -114,6 +114,8 @@ class PaperDB:
             paper_data['key_insights'] = json.dumps(paper_data['key_insights'])
         if 'metrics' in paper_data and isinstance(paper_data['metrics'], dict):
             paper_data['metrics'] = json.dumps(paper_data['metrics'])
+        if 'source' in paper_data and isinstance(paper_data['source'], list):
+            paper_data['source'] = json.dumps(paper_data['source'])
 
         # Build dynamic INSERT query based on provided fields
         columns = list(paper_data.keys())
