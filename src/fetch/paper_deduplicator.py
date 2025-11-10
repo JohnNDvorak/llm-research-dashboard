@@ -443,8 +443,24 @@ class PaperDeduplicator:
         elif len(sources) > 1:
             merged['source'] = sources
 
+        # Preserve arxiv_id if available
+        for paper in papers:
+            if paper.get('arxiv_id'):
+                merged['arxiv_id'] = paper['arxiv_id']
+                break
+
         # LinkedIn-specific fields (if any paper has them)
-        for field in ['linkedin_engagement', 'linkedin_company', 'linkedin_author_title', 'linkedin_post_url']:
+        for field in ['linkedin_post_id', 'linkedin_post_url', 'linkedin_author_name',
+                     'linkedin_author_title', 'linkedin_company', 'linkedin_likes',
+                     'linkedin_comments', 'linkedin_shares', 'linkedin_views',
+                     'linkedin_post_date']:
+            values = [p.get(field) for p in papers if p.get(field)]
+            if values:
+                merged[field] = values[0]  # Keep first non-null value
+
+        # Twitter/X-specific fields
+        for field in ['tweet_id', 'twitter_likes', 'twitter_retweets', 'twitter_replies',
+                     'twitter_poster', 'twitter_post_date']:
             values = [p.get(field) for p in papers if p.get(field)]
             if values:
                 merged[field] = values[0]  # Keep first non-null value

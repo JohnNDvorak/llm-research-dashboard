@@ -15,14 +15,32 @@ CREATE TABLE IF NOT EXISTS papers (
     fetch_date DATE,
     published_date DATE,
 
+    -- arXiv specific
+    arxiv_id TEXT UNIQUE,
+    arxiv_category TEXT,
+
     -- Social metrics
     social_score INTEGER DEFAULT 0,  -- Twitter: likes + retweets
 
+    -- X/Twitter metrics
+    tweet_id TEXT UNIQUE,
+    twitter_likes INTEGER DEFAULT 0,
+    twitter_retweets INTEGER DEFAULT 0,
+    twitter_replies INTEGER DEFAULT 0,
+    twitter_poster TEXT,
+    twitter_post_date DATE,
+
     -- LinkedIn metrics
-    linkedin_engagement INTEGER DEFAULT 0,
-    linkedin_company TEXT,
-    linkedin_author_title TEXT,
+    linkedin_post_id TEXT UNIQUE,
     linkedin_post_url TEXT,
+    linkedin_author_name TEXT,
+    linkedin_author_title TEXT,
+    linkedin_company TEXT,
+    linkedin_likes INTEGER DEFAULT 0,
+    linkedin_comments INTEGER DEFAULT 0,
+    linkedin_shares INTEGER DEFAULT 0,
+    linkedin_views INTEGER DEFAULT 0,
+    linkedin_post_date DATE,
     professional_score INTEGER DEFAULT 0,
 
     -- Combined scoring (calculated by PaperDeduplicator)
@@ -65,22 +83,6 @@ CREATE TABLE IF NOT EXISTS cost_tracking (
     FOREIGN KEY (paper_id) REFERENCES papers(id)
 );
 
--- LinkedIn posts table
-CREATE TABLE IF NOT EXISTS linkedin_posts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    post_url TEXT UNIQUE,
-    post_text TEXT,
-    author_name TEXT,
-    author_title TEXT,
-    company TEXT,
-    likes INTEGER,
-    comments INTEGER,
-    shares INTEGER,
-    posted_date TIMESTAMP,
-    paper_id TEXT,
-    fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (paper_id) REFERENCES papers(id)
-);
 
 -- Indices for performance
 CREATE INDEX IF NOT EXISTS idx_papers_stages ON papers(stages);
@@ -93,5 +95,9 @@ CREATE INDEX IF NOT EXISTS idx_papers_source ON papers(source);
 CREATE INDEX IF NOT EXISTS idx_papers_chroma_id ON papers(chroma_id);
 CREATE INDEX IF NOT EXISTS idx_cost_tracking_provider ON cost_tracking(provider);
 CREATE INDEX IF NOT EXISTS idx_cost_tracking_timestamp ON cost_tracking(timestamp);
-CREATE INDEX IF NOT EXISTS idx_linkedin_posts_company ON linkedin_posts(company);
-CREATE INDEX IF NOT EXISTS idx_linkedin_posts_paper_id ON linkedin_posts(paper_id);
+
+-- Additional indices for new columns
+CREATE INDEX IF NOT EXISTS idx_papers_arxiv_id ON papers(arxiv_id);
+CREATE INDEX IF NOT EXISTS idx_papers_tweet_id ON papers(tweet_id);
+CREATE INDEX IF NOT EXISTS idx_papers_linkedin_post_id ON papers(linkedin_post_id);
+CREATE INDEX IF NOT EXISTS idx_papers_published_date ON papers(published_date);
