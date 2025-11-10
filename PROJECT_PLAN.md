@@ -678,13 +678,14 @@ collection_name = "llm_papers"
 - ✅ Phase 2.2 (Paper Deduplicator): COMPLETE - 45/45 tests passing (100%)
 - ✅ Phase 1+2 Integration: VALIDATED - 12/12 integration tests passing
 - ✅ Test Suite: 315/315 tests passing (100% pass rate)
-- ⏳ Next: Phase 2.3 (Twitter Fetcher) or Phase 2.4 (LinkedIn Fetcher)
+- ⏳ **CURRENT: Phase 2.3 (Twitter Fetcher)** - Enhanced plan approved, ready to implement
+- 📋 Next: Phase 2.4 (LinkedIn Fetcher)
 
 **Deliverables:**
 - [x] arXiv fetcher with 2025-focused queries (COMPLETE) ✅
 - [x] Deduplication system (across all 3 sources) (COMPLETE) ✅
-- [ ] X/Twitter fetcher with social metrics (NEXT)
-- [ ] **LinkedIn fetcher with professional metrics** 🆕
+- [ ] X/Twitter fetcher with social metrics (IN PROGRESS - Enhanced plan ready) ⏳
+- [ ] **LinkedIn fetcher with professional metrics** (PENDING) 🆕
 - [x] SQLite storage with metadata (INTEGRATED) ✅
 - [x] Phase 1+2 integration validated (COMPLETE) ✅
 
@@ -712,12 +713,65 @@ collection_name = "llm_papers"
 - ✅ Performance: <1 second for 1000 papers
 - ✅ Configuration-driven from config/queries.yaml
 
-**2.3 X/Twitter Integration**
-- Implement `twitter_fetcher.py` using `tweepy`
-- Follow key accounts: @huggingface, @AnthropicAI, etc.
-- Extract arXiv links from tweets
-- Capture social metrics: likes, retweets, quote tweets
-- Rate limiting per Twitter API tier
+**2.3 X/Twitter Integration (NEXT - READY TO START)** ⏳
+- **Architecture:** Follow ArxivFetcher patterns for consistency
+- **Implementation:** Implement `twitter_fetcher.py` using `tweepy` (~500 lines)
+  - TwitterFetcher class with same structure as ArxivFetcher
+  - Multi-strategy fetching: accounts + hashtags
+  - arXiv link extraction with regex patterns
+  - Social score calculation: likes + retweets
+  - Rate limiting: 2s delay between requests
+  - Comprehensive error handling
+- **Configuration:** Already complete in config/queries.yaml
+  - 12 tracked accounts: @huggingface, @AnthropicAI, @OpenAI, @GoogleAI, etc.
+  - 9 hashtags: #LLM, #MachineLearning, #DPO, #RLHF, etc.
+  - Thresholds: min_likes: 10, min_retweets: 5
+  - Rate limits: max 1000 tweets/day, 2s delay
+- **Core Features:**
+  - `fetch_from_accounts(days=7)` - Search user timelines for arXiv links
+  - `fetch_by_hashtags(days=7)` - Search hashtags for research papers
+  - `fetch_recent_papers(days=7)` - Combined fetch from all sources
+  - `_extract_arxiv_links(tweet_text)` - Extract arXiv URLs with regex
+  - `_calculate_social_score(tweet)` - likes + retweets
+  - `_parse_tweet_metadata(tweet)` - Standardized dict format
+  - `_enforce_rate_limit()` - 2s delay enforcement
+  - `get_stats()` - Fetching statistics
+- **Data Format:** Matches ArxivFetcher for seamless deduplication
+  ```python
+  {
+      'id': f"arxiv:{arxiv_id}" or f"twitter_{tweet_id}",
+      'title': None,  # Filled by arXiv merge or tweet excerpt
+      'abstract': None,  # Filled by arXiv merge
+      'authors': [tweet_author],  # Tweet author attribution
+      'source': 'twitter',
+      'social_score': likes + retweets,
+      'twitter_tweet_id': tweet.id,
+      'twitter_author': tweet.author.username,
+      'twitter_url': f"https://twitter.com/{author}/status/{id}",
+      'fetch_date': datetime.now().date().isoformat(),
+  }
+  ```
+- **Integration Points:**
+  - Returns same dict format as ArxivFetcher
+  - PaperDeduplicator merges by arXiv ID
+  - Social scores combined with arXiv metadata
+  - Combined score: (social*0.4) + (prof*0.6) + (recency*0.3)
+- **Testing Strategy:** TDD with 40+ tests (~600 lines)
+  - TestTwitterFetcherInit: config loading, initialization
+  - TestTwitterFetcherHelpers: arXiv extraction, social scoring
+  - TestTwitterFetcherParsing: tweet metadata parsing
+  - TestTwitterFetcherAPI: mocked API calls
+  - TestTwitterFetcherIntegration: real API + deduplication
+  - TestTwitterFetcherEdgeCases: errors, rate limits, no arXiv links
+- **Success Criteria:**
+  - TwitterFetcher class implemented (~500 lines)
+  - 40+ tests passing (>80% coverage)
+  - Fetches from 12 tracked accounts
+  - Fetches by 9 hashtags
+  - Rate limiting enforced (2s delay)
+  - Extracts arXiv links correctly
+  - Integrates with PaperDeduplicator seamlessly
+  - Integration test validates Twitter → Deduplicator → Database flow
 
 **2.4 LinkedIn Integration** 🆕
 - Implement `linkedin_fetcher.py` using `linkedin-api` (unofficial) or `playwright` (web scraping)
@@ -761,15 +815,16 @@ collection_name = "llm_papers"
 
 **Success Criteria:**
 - ✅ Fetch papers from arXiv (working, 34/34 tests passing)
-- ⏳ Fetch 200 from Twitter (pending Phase 2.3)
-- ⏳ Fetch 100 from LinkedIn (pending Phase 2.4)
+- ⏳ Fetch 200 from Twitter (Phase 2.3 - enhanced plan ready, starting implementation)
+- ⏳ Fetch 100 from LinkedIn (Phase 2.4 - pending)
 - ✅ <5% duplicates across all sources (0% in test scenarios)
 - ✅ Combined scores calculated correctly (validated in 45 tests)
-- ⏳ LinkedIn company attribution working (pending Phase 2.4)
+- ⏳ LinkedIn company attribution working (Phase 2.4 - pending)
 - ✅ Tests pass with >80% coverage (315/315 tests passing - 100%)
 - ✅ Phase 1+2 integration validated (12/12 integration tests passing)
 - ✅ Database schema supports all features (combined_score added)
 - ✅ Performance requirements met (<1s for 1000 papers)
+- ⏳ Twitter integration complete (target: 40+ tests, ~500 lines production code)
 
 ---
 
@@ -1606,10 +1661,10 @@ reportlab>=4.0.0  # PDF generation
 
 ---
 
-**Project Plan Version:** 1.1
-**Last Updated:** 2025-11-08
-**Major Changes:** Added LinkedIn integration and vector embeddings throughout
-**Status:** Awaiting Approval
+**Project Plan Version:** 1.2
+**Last Updated:** 2025-11-10
+**Major Changes:** Enhanced Phase 2.3 (Twitter Fetcher) with detailed implementation plan
+**Status:** Phase 2.3 (Twitter Fetcher) - Ready to Implement
 
 ---
 
