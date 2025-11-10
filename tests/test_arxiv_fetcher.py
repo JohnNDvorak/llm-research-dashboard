@@ -276,8 +276,12 @@ class TestArxivFetcherDateMethods:
 
         # Check that search was called with date-appropriate query
         call_args = mock_search.call_args
-        assert 'query' in call_args[1]
-        assert 'submittedDate' in call_args[1]['query']
+        # Check if query was passed as positional or keyword argument
+        if call_args[0]:  # Positional args
+            assert 'submittedDate' in call_args[0][0]
+        else:  # Keyword args
+            assert 'query' in call_args[1]
+            assert 'submittedDate' in call_args[1]['query']
 
     @patch('src.fetch.arxiv_fetcher.ArxivFetcher.search_papers')
     def test_fetch_by_date_range(self, mock_search):
