@@ -83,8 +83,8 @@ dashboard:
 
 ## fetch: Fetch papers from all sources
 fetch:
-	@echo "Fetching papers from arXiv, X, and LinkedIn..."
-	@python scripts/fetch_daily.sh
+	@echo "Fetching papers from arXiv, X (formerly Twitter), and LinkedIn..."
+	@python -m src.fetch.main_fetch --days 7
 
 ## analyze: Analyze papers with LLM
 analyze:

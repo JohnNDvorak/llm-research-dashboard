@@ -775,27 +775,66 @@ collection_name = "llm_papers"
   - Integration test validates X → Deduplicator → Database flow
 
 **2.4 LinkedIn Integration** 🆕
-- Implement `linkedin_fetcher.py` using `linkedin-api` (unofficial) or `playwright` (web scraping)
-- **Two approaches:**
-  1. **LinkedIn API** (official, requires company page):
-     - Track company pages: OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research
+- **Architecture:** Follow ArxivFetcher/TwitterFetcher patterns for consistency
+- **Dual-Mode Implementation:** Automatic detection and fallback between API and scraping
+  1. **LinkedIn API** (official, requires developer credentials):
+     - Track company pages: OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research, Hugging Face
      - Fetch posts mentioning papers/research
-     - Extract engagement metrics
-  2. **Web Scraping** (fallback, more flexible):
-     - Use Playwright to navigate LinkedIn
-     - Search for hashtags: #LLM, #MachineLearning, #AIResearch
+     - Extract engagement metrics (likes, comments, shares, views)
+  2. **Web Scraping** (primary, more flexible):
+     - Use Playwright with anti-detection measures
+     - Search for hashtags: #LLM, #MachineLearning, #AIResearch, #DeepLearning
      - Extract posts with arXiv links
-     - Capture: author name, title, company, likes, comments, shares
-- **Data extraction:**
-  - Detect arXiv URLs in post text
+     - Capture comprehensive metadata including author credibility
+- **Enhanced Data Extraction:**
+  - Detect arXiv URLs in post text (multiple formats)
   - Extract company from author profile ("Research Scientist at OpenAI")
-  - Calculate professional_score: (likes * 1) + (comments * 3) + (shares * 5)
-- **Rate limiting:**
-  - Scraping: 1 request per 5 seconds, max 100 posts/day
-  - API: Follow LinkedIn rate limits
-- **Storage:**
-  - Raw posts → linkedin_posts table
-  - Linked papers → papers table with linkedin_* fields
+  - Author credibility assessment (verified researchers, company affiliation)
+  - Engagement breakdown: likes, comments, shares, views, reactions
+  - Professional engagement rate calculation
+- **Professional Score Algorithm:**
+  ```python
+  professional_score = (likes * 1) + (comments * 5) + (shares * 3) + (views * 0.001)
+  # Apply author credibility multiplier (1.5x for verified researchers/companies)
+  ```
+- **Anti-Detection Measures (Scraping Mode):**
+  - User agent rotation (5 different browsers)
+  - Session rotation every 50 posts
+  - Human-like behavior simulation (scrolls, delays, mouse movements)
+  - Proxy rotation support (optional)
+  - CAPTCHA detection and handling
+- **Rate Limiting (Conservative):**
+  - Base delay: 5 seconds between requests
+  - Random jitter: ±2 seconds
+  - Max 100 posts/day (configurable)
+  - Daily pause after 80 posts (reduce detection risk)
+  - Automatic mode switch on rate limit/block
+- **Caching & State Management:**
+  - Track seen posts to avoid duplicates
+  - Per-company last fetch timestamp
+  - Daily fetch counter with auto-pause
+  - Persistent session storage
+- **Error Handling & Resilience:**
+  - Exponential backoff on errors
+  - Automatic API ↔ scraping fallback
+  - Block detection and mode switching
+  - Comprehensive logging with structured data
+- **Integration Points:**
+  - Returns standardized dict format for PaperDeduplicator
+  - Stores raw data in linkedin_posts table
+  - Populates linkedin_* fields in papers table
+  - Professional scoring integrates with combined_score calculation
+- **Configuration (config/queries.yaml):**
+  ```yaml
+  linkedin:
+    tracked_companies:
+      - {name: "OpenAI", company_id: "openai", priority: "high"}
+      - {name: "Anthropic", company_id: "anthropic", priority: "high"}
+    hashtags: ["#LLM", "#MachineLearning", "#AIResearch"]
+    rate_limit_delay: 5
+    max_posts_per_day: 100
+    preferred_method: "scraping"  # or "api"
+  ```
 
 **2.5 Integration & Testing**
 - Integrate X and LinkedIn fetchers with PaperDeduplicator

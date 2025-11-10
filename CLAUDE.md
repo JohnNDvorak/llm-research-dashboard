@@ -142,19 +142,51 @@ def analyze_paper(abstract: str, title: str) -> Dict[str, Any]:
 
 ## LinkedIn Integration
 
-**CRITICAL:** LinkedIn scraping requires careful rate limiting to avoid blocks
+**CRITICAL:** LinkedIn scraping requires careful rate limiting and anti-detection measures
 
-**Rate limits:**
-- 5 seconds delay between requests
-- Max 100 posts per day
-- Rotate user agents
+**Dual-Mode Operation:**
+- **Primary:** Web scraping with Playwright (more flexible)
+- **Fallback:** LinkedIn API (if credentials available)
+- **Automatic:** Switch between modes based on availability/blocking
 
-**If blocked:**
-1. Increase delay: Edit `config/queries.yaml` → `rate_limit_delay: 10`
-2. Reduce volume: `max_posts_per_day: 50`
-3. Use LinkedIn API instead of scraping (requires developer account)
+**Rate Limiting (Conservative):**
+- Base delay: 5 seconds between requests (with ±2s jitter)
+- Max 100 posts/day (configurable in `config/queries.yaml`)
+- Session rotation: Every 50 posts
+- Daily pause: After 80 posts to reduce detection risk
+- User agent rotation: 5 different browser signatures
 
-**Tracked companies:** OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research, Hugging Face
+**Anti-Detection Measures:**
+- Human-like behavior simulation (scrolls, delays, mouse movements)
+- CAPTCHA detection and pause on detection
+- Proxy rotation support (configure if needed)
+- Session persistence and rotation
+- Block detection with automatic mode switching
+
+**If Blocked:**
+1. Automatic fallback to API mode (if credentials available)
+2. Increase delay: Edit `config/queries.yaml` → `rate_limit_delay: 10`
+3. Reduce volume: `max_posts_per_day: 50`
+4. Enable proxy rotation
+5. Switch to API-only mode (requires developer account)
+
+**Professional Score Calculation:**
+```python
+professional_score = (likes * 1) + (comments * 5) + (shares * 3) + (views * 0.001)
+# Apply 1.5x multiplier for verified researchers/companies
+```
+
+**Tracked Companies:**
+OpenAI, Anthropic, Google DeepMind, Meta AI, Microsoft Research, Hugging Face, Cohere, Inflection AI
+
+**Implementation Pattern:**
+```python
+from src.fetch.linkedin_fetcher import LinkedinFetcher
+
+fetcher = LinkedinFetcher()
+papers = fetcher.fetch_recent_papers(days=7)
+# Returns standardized format for PaperDeduplicator
+```
 
 ## Common Tasks
 

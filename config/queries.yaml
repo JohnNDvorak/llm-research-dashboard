@@ -114,35 +114,92 @@ twitter:
   rate_limit_delay: 2  # Seconds between requests
 
 linkedin:
-  # Companies to track
-  tracked_companies:
-    - "OpenAI"
-    - "Anthropic"
-    - "Google DeepMind"
-    - "Meta AI"
-    - "Microsoft Research"
-    - "Hugging Face"
-    - "Cohere"
-    - "Mistral AI"
-    - "Stability AI"
-    - "NVIDIA"
+  # Primary mode: "api" or "scraping"
+  preferred_method: "scraping"  # More flexible, though unofficial
 
-  # Research labs
+  # Companies to track (priority affects fetch order)
+  tracked_companies:
+    - name: "OpenAI"
+      company_id: "openai"  # LinkedIn company identifier
+      priority: "high"
+      last_fetch: null  # Will be updated automatically
+    - name: "Anthropic"
+      company_id: "anthropic"
+      priority: "high"
+      last_fetch: null
+    - name: "Google DeepMind"
+      company_id: "google-deepmind"
+      priority: "high"
+      last_fetch: null
+    - name: "Meta AI"
+      company_id: "meta-ai"
+      priority: "medium"
+      last_fetch: null
+    - name: "Microsoft Research"
+      company_id: "microsoft-research"
+      priority: "medium"
+      last_fetch: null
+    - name: "Hugging Face"
+      company_id: "huggingface"
+      priority: "medium"
+      last_fetch: null
+    - name: "Cohere"
+      company_id: "cohere"
+      priority: "low"
+      last_fetch: null
+    - name: "Inflection AI"
+      company_id: "inflection"
+      priority: "low"
+      last_fetch: null
+    - name: "NVIDIA Research"
+      company_id: "nvidia"
+      priority: "low"
+      last_fetch: null
+    - name: "Apple ML Research"
+      company_id: "apple"
+      priority: "low"
+      last_fetch: null
+
+  # Research labs and universities
   tracked_organizations:
     - "Stanford University"
     - "MIT CSAIL"
     - "UC Berkeley"
     - "Carnegie Mellon University"
+    - "Stanford HAI"
+    - "Berkeley BAIR"
 
-  # Hashtags
+  # Professional keywords for credibility assessment
+  professional_keywords:
+    - "research scientist"
+    - "machine learning engineer"
+    - "AI researcher"
+    - "research engineer"
+    - "ML researcher"
+    - "AI engineer"
+    - "principal researcher"
+    - "staff researcher"
+    - "senior researcher"
+    - "research manager"
+    - "phd student"
+    - "doctoral researcher"
+    - "postdoc"
+    - "research fellow"
+
+  # Hashtags to track (for hashtag search)
   hashtags:
-    - "LLM"
-    - "MachineLearning"
-    - "AIResearch"
-    - "ArtificialIntelligence"
-    - "DeepLearning"
-    - "NaturalLanguageProcessing"
-    - "GenerativeAI"
+    - "#LLM"
+    - "#MachineLearning"
+    - "#AIResearch"
+    - "#DeepLearning"
+    - "#NLP"
+    - "#GenerativeAI"
+    - "#ArtificialIntelligence"
+    - "#Research"
+    - "#PhD"
+    - "#ComputerScience"
+    - "#NeuralNetworks"
+    - "#Transformers"
 
   # Keywords in posts (must mention research/paper)
   keywords:
@@ -155,27 +212,73 @@ linkedin:
     - "training"
 
   # Professional score calculation
-  # score = (likes * 1) + (comments * 3) + (shares * 5)
-  score_weights:
-    likes: 1
-    comments: 3
-    shares: 5
+  # score = (likes * 1) + (comments * 5) + (shares * 3) + (views * 0.001)
+  scoring:
+    likes_weight: 1
+    comments_weight: 5  # Comments indicate thoughtful discussion
+    shares_weight: 3    # Shares indicate endorsement
+    views_weight: 0.001  # If available
+
+    # Credibility multipliers
+    verified_researcher_boost: 1.5
+    top_company_boost: 1.5
+    verified_company_boost: 1.3
 
   # Engagement thresholds
-  min_likes: 5
-  min_engagement_score: 20
+  min_likes: 1
+  min_comments: 0
+  min_shares: 0
+  min_engagement_score: 10
 
-  # Rate limiting (IMPORTANT: avoid blocking!)
-  rate_limit_delay: 5  # Seconds between requests
-  max_posts_per_day: 100
+  # Rate limiting (CRITICAL - LinkedIn is very strict)
+  rate_limit_delay: 5  # Base delay in seconds
+  jitter_range: 2  # Random jitter ±2 seconds
+  max_posts_per_day: 100  # Daily hard limit
+  daily_pause_threshold: 80  # Pause after this many posts
   max_requests_per_hour: 50
+  session_rotation_interval: 50  # Rotate session every N posts
 
-  # Scraping settings (if using web scraping)
+  # Scraping settings (anti-detection measures)
   scraping:
     user_agent_rotation: true
     headless: true
     max_scroll_depth: 10
     wait_time_seconds: 2
+
+    # Anti-detection settings
+    simulate_human_behavior: true
+    random_mouse_movements: true
+    random_scrolls: true
+    stealth_mode: true  # Hide automation indicators
+
+    # User agents to rotate through
+    user_agents:
+      - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15"
+      - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:132.0) Gecko/20100101 Firefox/132.0"
+      - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+
+  # API settings (if using official API)
+  api:
+    # LinkedIn API credentials (set in environment)
+    # LINKEDIN_CLIENT_ID
+    # LINKEDIN_CLIENT_SECRET
+    # LINKEDIN_ACCESS_TOKEN
+
+    # API rate limits
+    requests_per_second: 1
+    requests_per_hour: 100
+
+    # API fields to request
+    fields:
+      - "id"
+      - "text"
+      - "author"
+      - "publishedAt"
+      - "likesCount"
+      - "commentsCount"
+      - "sharesCount"
 
 # Deduplication settings
 deduplication:

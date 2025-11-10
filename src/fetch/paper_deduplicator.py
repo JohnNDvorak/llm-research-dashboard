@@ -237,6 +237,7 @@ class PaperDeduplicator:
         - 2401.00001v2 (with version)
         - https://arxiv.org/abs/2401.00001
         - https://arxiv.org/pdf/2401.00001.pdf
+        - Direct arxiv_id field
 
         Args:
             paper: Paper dictionary
@@ -246,6 +247,14 @@ class PaperDeduplicator:
         """
         # Pattern for arXiv ID: YYMM.NNNNN or YYMM.NNNNNvN
         arxiv_pattern = r'(\d{4}\.\d{4,5})(?:v\d+)?'
+
+        # First check explicit arxiv_id field (highest priority)
+        arxiv_id = paper.get('arxiv_id')
+        if arxiv_id:
+            # Extract the ID part if it contains a URL or other text
+            match = re.search(arxiv_pattern, str(arxiv_id))
+            if match:
+                return match.group(1)
 
         # Check ID field
         paper_id = paper.get('id', '')
