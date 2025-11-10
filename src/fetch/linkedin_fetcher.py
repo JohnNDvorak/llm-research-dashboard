@@ -295,24 +295,111 @@ class LinkedinFetcher:
         if not author_title:
             return None
 
-        # Common company patterns
+        # Comprehensive company patterns
         companies = {
+            # Major AI Labs
             'openai': 'OpenAI',
             'anthropic': 'Anthropic',
             'google deepmind': 'Google DeepMind',
+            'deepmind': 'Google DeepMind',
+            'xai': 'xAI',
+            'x.ai': 'xAI',
             'meta ai': 'Meta AI',
+            'meta': 'Meta AI',
+            'mistral ai': 'Mistral AI',
+            'mistral': 'Mistral AI',
+            'deepseek': 'DeepSeek',
+            'qwen': 'Qwen',
+            'alibaba': 'Qwen',
+
+            # Research Institutions
             'microsoft research': 'Microsoft Research',
-            'hugging face': 'Hugging Face',
-            'cohere': 'Cohere',
-            'inflection': 'Inflection AI',
+            'ms research': 'Microsoft Research',
+            'nvidia research': 'NVIDIA',
             'nvidia': 'NVIDIA',
+            'ibm research': 'IBM Research',
+            'ibm': 'IBM Research',
+            'ai2': 'AI2',
+            'allen institute': 'AI2',
+            'hugging face': 'Hugging Face',
+            'huggingface': 'Hugging Face',
+            'cohere': 'Cohere',
+            'minimax': 'Minimax',
+            'moonshot ai': 'Kimi K2',
+            'moonshot': 'Kimi K2',
+            'kimi': 'Kimi K2',
+
+            # Emerging AI Companies
+            'harmonic': 'Harmonic',
+            'axiom': 'Axiom',
+            'deep cogito': 'Deep Cogito',
+            'deepcogito': 'Deep Cogito',
+            'z.ai': 'Z.AI',
+            'zai': 'Z.AI',
+
+            # Tech Giants AI Divisions
+            'apple ml research': 'Apple',
             'apple': 'Apple',
+            'amazon science': 'Amazon',
+            'amazon': 'Amazon',
+            'google brain': 'Google Brain',
+            'baidu research': 'Baidu',
+            'baidu': 'Baidu',
+            'tencent ai': 'Tencent AI',
+            'tencent': 'Tencent AI',
+            'bytedance ai': 'ByteDance AI',
+            'bytedance': 'ByteDance AI',
+
+            # Additional Notable Companies
+            'inflection ai': 'Inflection AI',
+            'inflection': 'Inflection AI',
+            'character.ai': 'Character.AI',
+            'character': 'Character.AI',
+            'stability ai': 'Stability AI',
+            'stability': 'Stability AI',
+            'together ai': 'Together AI',
+            'together': 'Together AI',
+
+            # Common variations and patterns
+            'research scientist at': '',  # Will extract company after "at"
+            'engineer at': '',
+            'researcher at': '',
+            'scientist at': '',
+            'working at': '',
+            '@': '',
         }
 
         title_lower = author_title.lower()
+
+        # First try direct pattern matching
         for pattern, company in companies.items():
-            if pattern in title_lower:
-                return company
+            if pattern and pattern in title_lower:
+                return company if company else None
+
+        # Try to extract company after common phrases
+        # Pattern: "Research Scientist at [Company Name]"
+        at_patterns = [
+            r'(?:research scientist|ml engineer|ai researcher|research engineer|software engineer|data scientist|senior researcher|principal scientist|staff scientist)\s+at\s+(.*?)(?:,|\.|$)',
+            r'at\s+([A-Za-z0-9\s&.-]+?)(?:,|\s*$)',
+        ]
+
+        for pattern in at_patterns:
+            match = re.search(pattern, author_title, re.IGNORECASE)
+            if match:
+                company_candidate = match.group(1).strip()
+                # Clean up the company name
+                company_candidate = re.sub(r'\s+', ' ', company_candidate)
+
+                # Check if this matches any of our known companies
+                for known_pattern, known_company in companies.items():
+                    if known_pattern and known_pattern in company_candidate.lower():
+                        return known_company
+
+                # Return the extracted company if it looks like a company name
+                if len(company_candidate) > 2 and len(company_candidate) < 50:
+                    # Capitalize properly
+                    company_candidate = ' '.join(word.capitalize() for word in company_candidate.split())
+                    return company_candidate
 
         return None
 
@@ -331,8 +418,15 @@ class LinkedinFetcher:
         title_lower = author_title.lower()
         has_research_title = any(indicator in title_lower for indicator in research_indicators)
         works_at_top_company = company in {
-            'OpenAI', 'Anthropic', 'Google DeepMind', 'Meta AI',
-            'Microsoft Research', 'Hugging Face'
+            # Top AI Labs
+            'OpenAI', 'Anthropic', 'Google DeepMind', 'xAI', 'Meta AI',
+            'Mistral AI', 'DeepSeek', 'Qwen',
+            # Major Research Institutions
+            'Microsoft Research', 'NVIDIA', 'IBM Research', 'AI2',
+            # Notable Companies
+            'Hugging Face', 'Cohere', 'Minimax', 'Kimi K2',
+            # Tech Giants
+            'Apple', 'Amazon', 'Google Brain', 'Baidu', 'Tencent AI'
         }
 
         return has_research_title or works_at_top_company

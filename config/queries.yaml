@@ -119,6 +119,7 @@ linkedin:
 
   # Companies to track (priority affects fetch order)
   tracked_companies:
+    # Major AI Labs (High Priority)
     - name: "OpenAI"
       company_id: "openai"  # LinkedIn company identifier
       priority: "high"
@@ -131,12 +132,42 @@ linkedin:
       company_id: "google-deepmind"
       priority: "high"
       last_fetch: null
+    - name: "xAI"
+      company_id: "xai"
+      priority: "high"
+      last_fetch: null
     - name: "Meta AI"
       company_id: "meta-ai"
-      priority: "medium"
+      priority: "high"
       last_fetch: null
+    - name: "Mistral AI"
+      company_id: "mistral-ai"
+      priority: "high"
+      last_fetch: null
+    - name: "DeepSeek"
+      company_id: "deepseek"
+      priority: "high"
+      last_fetch: null
+    - name: "Qwen (Alibaba)"
+      company_id: "qwen"
+      priority: "high"
+      last_fetch: null
+
+    # Research Institutions (Medium Priority)
     - name: "Microsoft Research"
       company_id: "microsoft-research"
+      priority: "medium"
+      last_fetch: null
+    - name: "NVIDIA Research"
+      company_id: "nvidia"
+      priority: "medium"
+      last_fetch: null
+    - name: "IBM Research"
+      company_id: "ibm-research"
+      priority: "medium"
+      last_fetch: null
+    - name: "AI2 (Allen Institute for AI)"
+      company_id: "allen-ai"
       priority: "medium"
       last_fetch: null
     - name: "Hugging Face"
@@ -145,18 +176,76 @@ linkedin:
       last_fetch: null
     - name: "Cohere"
       company_id: "cohere"
+      priority: "medium"
+      last_fetch: null
+    - name: "Minimax"
+      company_id: "minimax"
+      priority: "medium"
+      last_fetch: null
+    - name: "Kimi K2 (Moonshot AI)"
+      company_id: "moonshot-ai"
+      priority: "medium"
+      last_fetch: null
+
+    # Emerging AI Companies (Medium Priority)
+    - name: "Harmonic"
+      company_id: "harmonic"
+      priority: "medium"
+      last_fetch: null
+    - name: "Axiom"
+      company_id: "axiom"
+      priority: "medium"
+      last_fetch: null
+    - name: "Deep Cogito"
+      company_id: "deep-cogito"
+      priority: "medium"
+      last_fetch: null
+    - name: "Z.AI"
+      company_id: "z-ai"
+      priority: "medium"
+      last_fetch: null
+
+    # Tech Giants AI Divisions (Lower Priority)
+    - name: "Apple ML Research"
+      company_id: "apple"
       priority: "low"
       last_fetch: null
+    - name: "Amazon Science"
+      company_id: "amazon-science"
+      priority: "low"
+      last_fetch: null
+    - name: "Google Brain"
+      company_id: "google-brain"
+      priority: "low"
+      last_fetch: null
+    - name: "Baidu Research"
+      company_id: "baidu-research"
+      priority: "low"
+      last_fetch: null
+    - name: "Tencent AI Lab"
+      company_id: "tencent-ai"
+      priority: "low"
+      last_fetch: null
+    - name: "ByteDance AI Lab"
+      company_id: "bytedance-ai"
+      priority: "low"
+      last_fetch: null
+
+    # Additional Notable Companies
     - name: "Inflection AI"
       company_id: "inflection"
       priority: "low"
       last_fetch: null
-    - name: "NVIDIA Research"
-      company_id: "nvidia"
+    - name: "Character.AI"
+      company_id: "character-dot-ai"
       priority: "low"
       last_fetch: null
-    - name: "Apple ML Research"
-      company_id: "apple"
+    - name: "Stability AI"
+      company_id: "stability-ai"
+      priority: "low"
+      last_fetch: null
+    - name: "Together AI"
+      company_id: "together-ai"
       priority: "low"
       last_fetch: null
 
