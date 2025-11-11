@@ -6,9 +6,11 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 
-# Add src to path for imports
-project_root = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(project_root / 'src'))
+# Add src to path for imports (works both locally and on Streamlit Cloud)
+current_dir = Path(__file__).parent
+project_root = current_dir.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import streamlit as st
 import pandas as pd
@@ -16,11 +18,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from loguru import logger
 
-# Import our modules
-from storage.database import PaperDatabase
-from embeddings.semantic_search import SemanticSearch
-from utils.config_loader import get_config, get_stage_keywords
-from utils.cost_tracker import CostTracker
+# Import our modules with absolute imports
+from src.storage.database import PaperDatabase
+from src.embeddings.semantic_search import SemanticSearch
+from src.utils.config_loader import get_config, get_stage_keywords
+from src.utils.cost_tracker import CostTracker
 
 
 # Configure Streamlit page
