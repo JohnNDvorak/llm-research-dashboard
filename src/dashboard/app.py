@@ -6,33 +6,34 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 
-# Handle imports for both local and Streamlit Cloud deployment
-def setup_imports():
-    """Setup Python path for imports."""
-    # Get the directory of this file
-    current_dir = Path(__file__).parent
+# Setup Python path
+def ensure_path():
+    """Ensure we can import our modules regardless of how we're run."""
+    current_file = Path(__file__).resolve()
 
-    # Determine project root
-    if current_dir.name == 'dashboard':
-        # Running from src/dashboard/ (local)
-        project_root = current_dir.parent.parent
+    # If we're in src/dashboard/, go to project root
+    if current_file.parent.name == 'dashboard' and current_file.parent.parent.name == 'src':
+        project_root = current_file.parent.parent.parent
     else:
-        # Running from project root (Streamlit Cloud)
-        project_root = current_dir
+        # Already at project root or similar
+        project_root = current_file.parent
 
-    # Add project root to path
-    if str(project_root) not in sys.path:
-        sys.path.insert(0, str(project_root))
+    # Add project root to sys.path
+    project_root_str = str(project_root)
+    if project_root_str not in sys.path:
+        sys.path.insert(0, project_root_str)
 
-    # Add src to path if needed
-    src_path = project_root / 'src'
-    if src_path.exists() and str(src_path) not in sys.path:
-        sys.path.insert(0, str(src_path))
+    # Also add src directory if it exists
+    src_dir = project_root / 'src'
+    if src_dir.exists():
+        src_str = str(src_dir)
+        if src_str not in sys.path:
+            sys.path.insert(0, src_str)
 
     return project_root
 
-# Setup imports
-project_root = setup_imports()
+# Ensure paths are set
+ensure_path()
 
 import streamlit as st
 import pandas as pd
@@ -40,19 +41,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 from loguru import logger
 
-# Import our modules - try both relative and absolute paths
+# Import our modules
 try:
-    # Try relative imports first (local development)
-    from storage.database import PaperDatabase
-    from embeddings.semantic_search import SemanticSearch
-    from utils.config_loader import get_config, get_stage_keywords
-    from utils.cost_tracker import CostTracker
-except ImportError:
-    # Fall back to absolute imports (Streamlit Cloud)
+    # Try importing from project root
     from src.storage.database import PaperDatabase
     from src.embeddings.semantic_search import SemanticSearch
     from src.utils.config_loader import get_config, get_stage_keywords
     from src.utils.cost_tracker import CostTracker
+except ImportError:
+    # If that fails, try direct imports (if we're already in src)
+    from storage.database import PaperDatabase
+    from embeddings.semantic_search import SemanticSearch
+    from utils.config_loader import get_config, get_stage_keywords
+    from utils.cost_tracker import CostTracker
 
 
 # Configure Streamlit page
