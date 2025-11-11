@@ -44,7 +44,7 @@ git push origin main
    - Click "New app" button
    - Select your GitHub repository
    - Select branch: `main`
-   - Main file path: `src/dashboard/app.py`
+   - Main file path: `streamlit_app.py` (NOT src/dashboard/app.py)
    - Python version: `3.11`
 
 3. **Advanced Settings** (optional)

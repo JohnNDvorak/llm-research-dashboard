@@ -6,11 +6,33 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import json
 
-# Add src to path for imports (works both locally and on Streamlit Cloud)
-current_dir = Path(__file__).parent
-project_root = current_dir.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+# Handle imports for both local and Streamlit Cloud deployment
+def setup_imports():
+    """Setup Python path for imports."""
+    # Get the directory of this file
+    current_dir = Path(__file__).parent
+
+    # Determine project root
+    if current_dir.name == 'dashboard':
+        # Running from src/dashboard/ (local)
+        project_root = current_dir.parent.parent
+    else:
+        # Running from project root (Streamlit Cloud)
+        project_root = current_dir
+
+    # Add project root to path
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+
+    # Add src to path if needed
+    src_path = project_root / 'src'
+    if src_path.exists() and str(src_path) not in sys.path:
+        sys.path.insert(0, str(src_path))
+
+    return project_root
+
+# Setup imports
+project_root = setup_imports()
 
 import streamlit as st
 import pandas as pd
@@ -18,11 +40,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 from loguru import logger
 
-# Import our modules with absolute imports
-from src.storage.database import PaperDatabase
-from src.embeddings.semantic_search import SemanticSearch
-from src.utils.config_loader import get_config, get_stage_keywords
-from src.utils.cost_tracker import CostTracker
+# Import our modules - try both relative and absolute paths
+try:
+    # Try relative imports first (local development)
+    from storage.database import PaperDatabase
+    from embeddings.semantic_search import SemanticSearch
+    from utils.config_loader import get_config, get_stage_keywords
+    from utils.cost_tracker import CostTracker
+except ImportError:
+    # Fall back to absolute imports (Streamlit Cloud)
+    from src.storage.database import PaperDatabase
+    from src.embeddings.semantic_search import SemanticSearch
+    from src.utils.config_loader import get_config, get_stage_keywords
+    from src.utils.cost_tracker import CostTracker
 
 
 # Configure Streamlit page
