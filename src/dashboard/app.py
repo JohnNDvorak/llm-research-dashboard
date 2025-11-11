@@ -53,7 +53,7 @@ last_error = None
 
 # Try 1: Import with src prefix (when running from project root)
 try:
-    from src.storage.paper_db import PaperDatabase
+    from src.storage.paper_db import PaperDB
     from src.embeddings.semantic_search import SemanticSearch
     from src.utils.config_loader import get_config, get_stage_keywords
     from src.utils.cost_tracker import CostTracker
@@ -66,7 +66,7 @@ except ImportError as e:
 # Try 2: Direct imports (when running from within src)
 if not modules_imported:
     try:
-        from storage.paper_db import PaperDatabase
+        from storage.paper_db import PaperDB
         from embeddings.semantic_search import SemanticSearch
         from utils.config_loader import get_config, get_stage_keywords
         from utils.cost_tracker import CostTracker
@@ -84,7 +84,7 @@ if not modules_imported:
             sys.path.pop()
 
         # Now try importing
-        from storage.paper_db import PaperDatabase
+        from storage.paper_db import PaperDB
         from embeddings.semantic_search import SemanticSearch
         from utils.config_loader import get_config, get_stage_keywords
         from utils.cost_tracker import CostTracker
@@ -167,7 +167,7 @@ st.markdown("""
 def init_session_state():
     """Initialize session state variables."""
     if 'db' not in st.session_state:
-        st.session_state.db = PaperDatabase()
+        st.session_state.db = PaperDB()
     if 'semantic_search' not in st.session_state:
         st.session_state.semantic_search = SemanticSearch()
     if 'cost_tracker' not in st.session_state:
