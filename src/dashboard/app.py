@@ -42,18 +42,58 @@ import plotly.graph_objects as go
 from loguru import logger
 
 # Import our modules
+# Try different import approaches
+modules_imported = False
+last_error = None
+
+# Try 1: Import with src prefix (when running from project root)
 try:
-    # Try importing from project root
     from src.storage.database import PaperDatabase
     from src.embeddings.semantic_search import SemanticSearch
     from src.utils.config_loader import get_config, get_stage_keywords
     from src.utils.cost_tracker import CostTracker
-except ImportError:
-    # If that fails, try direct imports (if we're already in src)
-    from storage.database import PaperDatabase
-    from embeddings.semantic_search import SemanticSearch
-    from utils.config_loader import get_config, get_stage_keywords
-    from utils.cost_tracker import CostTracker
+    modules_imported = True
+    logger.info("Imported modules with src prefix")
+except ImportError as e:
+    last_error = e
+    logger.debug(f"Failed to import with src prefix: {e}")
+
+# Try 2: Direct imports (when running from within src)
+if not modules_imported:
+    try:
+        from storage.database import PaperDatabase
+        from embeddings.semantic_search import SemanticSearch
+        from utils.config_loader import get_config, get_stage_keywords
+        from utils.cost_tracker import CostTracker
+        modules_imported = True
+        logger.info("Imported modules directly")
+    except ImportError as e:
+        last_error = e
+        logger.debug(f"Failed to import directly: {e}")
+
+# Try 3: Absolute imports from sys.path
+if not modules_imported:
+    try:
+        # Remove src from path if it's there
+        if 'src' in sys.path[-1]:
+            sys.path.pop()
+
+        # Now try importing
+        from storage.database import PaperDatabase
+        from embeddings.semantic_search import SemanticSearch
+        from utils.config_loader import get_config, get_stage_keywords
+        from utils.cost_tracker import CostTracker
+        modules_imported = True
+        logger.info("Imported modules after path adjustment")
+    except ImportError as e:
+        last_error = e
+        logger.debug(f"Failed to import after path adjustment: {e}")
+
+# If all attempts failed, raise the last error
+if not modules_imported:
+    logger.error(f"Failed to import modules. Last error: {last_error}")
+    logger.error(f"Current sys.path: {sys.path}")
+    raise ImportError(f"Could not import required modules. Last error: {last_error}")
 
 
 # Configure Streamlit page
