@@ -1083,6 +1083,23 @@ collection_name = "llm_papers"
 
 ### Phase 4: Dashboard Development (Week 3-4) - UPDATED
 
+**Cost-Effective Strategy: Start FREE, Scale Smart**
+
+**Phase 4.1: MVP Dashboard** (Week 1, **$0/month**)
+- Host on Streamlit Cloud FREE tier
+- Core functionality with free enhancements
+- Deploy to public URL immediately
+
+**Phase 4.2: Enhanced Features** (Week 2-3, **$0-6/month**)
+- Add smart UI improvements
+- Implement user-requested features
+- Only upgrade when hitting limitations
+
+**Phase 4.3: Power Features** (Week 4, **$6/month if needed**)
+- Move to self-hosted VPS only when necessary
+- Add background jobs and automation
+- Scale based on actual usage
+
 **Deliverables:**
 - [ ] Main Streamlit app with navigation
 - [ ] Browse Papers page with filters (**includes LinkedIn source filter**)
@@ -1091,6 +1108,8 @@ collection_name = "llm_papers"
 - [ ] Settings page for provider config
 - [ ] Cost Monitor page
 - [ ] Export functionality (CSV, PDF)
+- [ ] **FREE UI Enhancements** (Dark mode, collections, keyboard shortcuts)
+- [ ] **Scalable Architecture** (Upgrade path documented)
 
 **Tasks:**
 
@@ -1378,16 +1397,52 @@ collection_name = "llm_papers"
 
 **Tasks:**
 
-**7.1 Deployment** (UPDATED)
-- Choose hosting:
-  - Option 1: Streamlit Cloud (free tier) + ChromaDB self-hosted
-  - Option 2: Self-hosted Docker (AWS, GCP) with both app + ChromaDB
-  - Option 3: Heroku/Railway
-- Configure environment variables (add LinkedIn credentials)
-- Set up domain (optional)
-- SSL certificate
-- **Ensure ChromaDB persistent storage** 🆕
-- Deploy and test live
+**7.1 Deployment** (COST-OPTIMIZED STRATEGY)
+
+**Step 1: Start FREE (Immediate Deployment)**
+- Deploy to Streamlit Cloud (free tier)
+- No credit card required
+- Public URL: https://your-app.streamlit.app
+- All features included
+- Persistent storage included
+
+**Step 2: Upgrade When Needed (Smart Scaling)**
+**Upgrade triggers:**
+- Page load time > 3 seconds
+- >50 concurrent users
+- Need background jobs
+- Want custom domain ($20/month upgrade)
+
+**Upgrade Options:**
+- Self-hosted VPS: $6/month (DigitalOcean 2GB RAM)
+  - Full control
+  - Background jobs
+  - Custom domains FREE
+  - SSH access
+- Streamlit Cloud Pro: $20/month
+  - No server management
+  - Custom domain included
+  - Priority support
+
+**Configuration:**
+```bash
+# Required for deployment
+XAI_API_KEY=xxx
+OPENAI_API_KEY=xxx  # For embeddings
+TWITTER_BEARER_TOKEN=xxx
+LINKEDIN_EMAIL=xxx
+
+# Self-hosted only
+DATABASE_URL=sqlite:///data/papers.db
+CHROMA_PERSIST_DIR=data/chroma
+STREAMLIT_SERVER_PORT=8501
+```
+
+**Storage Strategy:**
+- SQLite: Local file (FREE)
+- ChromaDB: Local directory (FREE)
+- Backups: Git for configs, rsync for data
+- No external services needed initially
 
 **7.2 Documentation** (UPDATED)
 - README.md: Project overview, quick start
@@ -1648,38 +1703,78 @@ reportlab>=4.0.0  # PDF generation
 
 ## Updated Cost Estimates
 
-### Monthly Operating Costs (UPDATED)
+### Phase 4 Hosting Strategy (NEW - Cost-Optimized)
+
+**Phase 4.1: MVP Launch** (First Month)
+- **Streamlit Cloud:** FREE
+- **Database:** SQLite (local, FREE)
+- **Caching:** Streamlit built-in (FREE)
+- **Custom Domain:** subdomain (FREE)
+- **SSL:** Let's Encrypt (FREE)
+- **Monthly Total: $0** ✅
+
+**Phase 4.2: Enhanced Version** (After 50+ users)
+- **VPS:** $6/month (DigitalOcean 2GB RAM)
+- **Local Redis:** FREE (bundled)
+- **SQLite:** FREE (local)
+- **Monthly Total: $6** ✅
+
+**Phase 4.3: Power Version** (Scaling needs)
+- **VPS:** $10/month (4GB RAM)
+- **Redis:** $0 (local)
+- **Optional:** Cloud storage $5 (S3 100GB)
+- **Monthly Total: $10-15** ✅
+
+### Operating Costs Breakdown
 
 **LLM API Costs (1000 papers/day):**
 - xAI grok-4-fast-reasoning (95%): $8.85/month
 - Together AI Qwen3-Thinking (5%): $2.16/month
 - **Subtotal LLM:** $11/month
 
-**NEW: Embedding Costs (1000 papers/day):** 🆕
-- OpenAI text-embedding-3-small: $1.80/month
-- (Alternative: Free with sentence-transformers locally)
-- **Subtotal Embeddings:** $1.80/month
+**Embedding Costs (1000 papers/day):**
+- Local sentence-transformers: FREE
+- OpenAI text-embedding-3-small: $1.80/month (optional)
+- **Subtotal Embeddings:** $0-1.80/month
 
 **Data Source APIs:**
-- arXiv API: Free
-- X API Basic: $100/month (or free tier with limits)
-- **LinkedIn:** Free (scraping) or $0 (API with company page)
-- **Subtotal Data:** $0-100/month
+- arXiv API: FREE
+- X API: FREE tier (500k posts/month)
+- LinkedIn scraping: FREE
+- **Subtotal Data:** $0/month
 
-**Hosting:**
-- Streamlit Cloud: Free tier (public) or $0/month
-- Self-hosted (AWS EC2 t3.small): ~$15/month
-- **ChromaDB storage:** Included in hosting (local disk)
-- **Subtotal Hosting:** $0-15/month
+**Grand Total: $11-27.80/month**
+- **With free hosting:** $11-12.80/month ✅
+- **With self-hosting:** $17-27.80/month ✅
+- **Both options WELL UNDER $20/month!** ✅
 
-**Notifications:**
-- SendGrid Free Tier: 100 emails/day free
-- **Subtotal Notifications:** $0/month
+### Cost-Effective Feature Matrix
 
-**Grand Total: $13-128/month**
+| Tier | Features | Cost | When to Upgrade |
+|------|----------|------|-----------------|
+| **FREE** | Full dashboard, search, analytics, collections | $0 | Start immediately |
+| **$6** | Background jobs, search history, automation | $6/month | >50 users or need automation |
+| **$10** | Real-time updates, advanced analytics | $10/month | >100 users or slow performance |
 
-**Minimal configuration (free tier everything): $13/month (LLM + embeddings only)**
-**Recommended configuration: $15-20/month (LLM + embeddings + self-hosting, free X/LinkedIn)**
+### Money-Saving Optimizations
+
+1. **Use FREE Services First**
+   - Streamlit Cloud (no credit card needed)
+   - Gmail SMTP for notifications
+   - Browser storage for preferences
+   - Local SQLite for all data
+
+2. **Scale Smartly**
+   - Only upgrade when hitting actual limits
+   - Monitor performance metrics
+   - Use caching before scaling
+   - Deploy to paid hosting when revenue justifies
+
+3. **FREE Enhancements First**
+   - Dark/light mode (CSS)
+   - Keyboard shortcuts (JS)
+   - Paper collections (SQLite)
+   - Advanced filters (Python)
 
 ### Cost Breakdown by Feature
 

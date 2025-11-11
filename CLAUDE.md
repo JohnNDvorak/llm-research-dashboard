@@ -21,6 +21,21 @@ make fetch              # Fetch papers from arXiv, X (formerly Twitter), LinkedI
 make analyze            # Analyze papers with LLM (uses grok-4 by default)
 make embed              # Generate vector embeddings
 make dashboard          # Launch Streamlit UI (localhost:8501)
+make deploy             # Deploy to Streamlit Cloud (FREE)
+```
+
+### Deployment (Cost-Optimized)
+```bash
+# Phase 4.1: FREE Deployment
+streamlit run src/dashboard/app.py  # Local testing
+# Deploy to Streamlit Cloud via UI (FREE)
+
+# Phase 4.2: Self-hosted (when needed)
+# $6/month VPS deployment
+python scripts/deploy.py --host=vps
+
+# Monitoring hosting costs
+make hosting-cost       # Check current monthly cost
 ```
 
 ### Testing
@@ -28,12 +43,15 @@ make dashboard          # Launch Streamlit UI (localhost:8501)
 make test               # Run full test suite (target: >80% coverage)
 make test-unit          # Unit tests only
 make test-semantic      # Test semantic search quality (Precision@5 >80%)
+make test-load          # Load testing with simulated users
 ```
 
 ### Monitoring
 ```bash
 make cost-report        # View API spending breakdown
 make backup             # Backup SQLite + ChromaDB
+make performance        # Check page load times, optimize
+make metrics            # View usage statistics and triggers
 ```
 
 ## Code Style
@@ -277,6 +295,192 @@ Before moving to next phase:
 
 **Last Updated:** 2025-11-10
 **Current Phase:** ✅ Phase 1 & 2 COMPLETE | ✅ Phase 3 COMPLETE (LLM Analysis & Embeddings) | 📋 Ready for Phase 4 (Dashboard)
+
+## Phase 4 Hosting Strategy (COST-OPTIMIZED)
+
+### 🎯 **Core Principle: Start FREE, Scale Smart**
+
+### **Phase 4.1: MVP Launch - $0/month**
+```python
+# Streamlit Cloud FREE tier includes:
+✅ Full application hosting
+✅ Public URL (your-app.streamlit.app)
+✅ SSL certificate
+✅ Persistent storage
+✅ Custom subdomain
+✅ No credit card needed
+
+# All Phase 4 features work:
+✅ Browse papers with filters
+✅ Semantic search
+✅ Analytics dashboard
+✅ Cost monitoring
+✅ Export functionality
+```
+
+### **Phase 4.2: Enhanced - $6/month**
+```python
+# Upgrade triggers:
+- Page load > 3 seconds
+- >50 concurrent users
+- Need background jobs
+
+# Self-hosted VPS ($6/month):
+✅ DigitalOcean 2GB RAM
+✅ Background job support
+✅ Custom domains FREE
+✅ Full SSH access
+✅ Local Redis (FREE)
+```
+
+### **Phase 4.3: Production - $10-15/month**
+```python
+# When you have:
+- >100 daily users
+- Need automation
+- Real-time features
+
+# Upgraded VPS ($10-15/month):
+✅ 4GB RAM
+✅ Dedicated processing
+✅ Automated backups
+✅ Email notifications
+✅ Analytics tracking
+```
+
+## 💡 **FREE Enhancements First**
+
+Before paying anything, implement these:
+
+### **UI/UX Improvements (FREE)**
+```python
+1. Dark/Light Mode Toggle
+   - CSS custom properties
+   - localStorage persistence
+
+2. Keyboard Shortcuts
+   - JavaScript event listeners
+   - Power user features
+
+3. Advanced Filters
+   - Multi-select dropdowns
+   - Date range pickers
+   - Saved filter presets
+
+4. Paper Collections
+   - SQLite table for user data
+   - Drag-and-drop organization
+```
+
+### **Smart Caching (FREE)**
+```python
+1. Streamlit @st.cache_data
+   - Cache expensive computations
+   - Cache API responses
+   - Cache search results
+
+2. Browser Storage
+   - localStorage for preferences
+   - sessionStorage for session data
+   - IndexedDB for large data
+```
+
+### **Analytics (FREE)**
+```python
+1. Built-in Visualizations
+   - Plotly (already included)
+   - Pandas calculations
+   - Interactive charts
+
+2. User Metrics
+   - Track page views
+   - Monitor search terms
+   - Analyze user behavior
+```
+
+## 📊 **Cost Tracking Dashboard**
+
+```python
+# Monitor these metrics:
+1. Page Load Times
+   - Alert if > 3 seconds
+   - Track by page
+
+2. User Growth
+   - Active users per day
+   - Peak concurrent users
+
+3. Resource Usage
+   - CPU percentage
+   - Memory usage
+   - API call volume
+
+4. Cost Breakdown
+   - LLM API costs
+   - Data source costs
+   - Hosting costs
+```
+
+## 🚀 **Deployment Commands**
+
+```bash
+# Local Development
+streamlit run src/dashboard/app.py
+
+# Deploy to Streamlit Cloud (FREE)
+# 1. Push to GitHub
+# 2. Connect Streamlit Cloud
+# 3. Deploy in 1 click
+
+# Deploy to VPS ($6/month)
+python scripts/deploy.py --target=vps
+# Automated deployment with:
+# - Nginx configuration
+# - SSL certificate
+# - Process management
+# - Log rotation
+```
+
+## 🔔 **Upgrade Triggers Checklist**
+
+Only upgrade when:
+
+```markdown
+[ ] Streamlit Cloud shows "Resource Limits"
+[ ] Users report slow loading (>3s)
+[ ] Need automated daily tasks
+[ ] Want custom domain without paying $20/month
+[ ] Background processing is required
+[ ] Email notifications needed at scale
+```
+
+## 💰 **Monthly Cost Summary**
+
+| Service | Cost | When to Start |
+|---------|------|----------------|
+| **Dashboard** | $0-6 | Start at $0 |
+| **LLM APIs** | $11-12 | From Day 1 |
+| **Embeddings** | $0-1.80 | Use local model |
+| **Data Sources** | $0 | Free tiers sufficient |
+| **Total** | **$11-19** | **Under $20!** ✅ |
+
+## 🎯 **Success Metrics (Under $20)**
+
+- **Deploy immediately** on Streamlit Cloud FREE
+- **Add 100 papers/day** without extra cost
+- **Serve 100 users** before upgrading
+- **Keep total costs < $20/month**
+- **Scale only when needed**
+
+### 💡 **Pro Tips**
+
+1. **Use free services first** - Don't pay for what you get free
+2. **Monitor usage closely** - Know when to upgrade
+3. **Optimize before scaling** - Cache and compress
+4. **Deploy early** - Don't wait for perfection
+5. **User feedback drives upgrades** - Not assumptions
+
+This strategy gets you a production-ready dashboard immediately, scales smartly, and stays well under your $20/month budget! 🎉
 
 **Session 2025-11-10 Final Summary:**
 
