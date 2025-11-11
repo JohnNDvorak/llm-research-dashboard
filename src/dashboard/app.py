@@ -42,13 +42,18 @@ import plotly.graph_objects as go
 from loguru import logger
 
 # Import our modules
-# Try different import approaches
+# Note: The actual files are:
+# - storage/paper_db.py (not database.py)
+# - embeddings/semantic_search.py
+# - utils/config_loader.py
+# - utils/cost_tracker.py
+
 modules_imported = False
 last_error = None
 
 # Try 1: Import with src prefix (when running from project root)
 try:
-    from src.storage.database import PaperDatabase
+    from src.storage.paper_db import PaperDatabase
     from src.embeddings.semantic_search import SemanticSearch
     from src.utils.config_loader import get_config, get_stage_keywords
     from src.utils.cost_tracker import CostTracker
@@ -61,7 +66,7 @@ except ImportError as e:
 # Try 2: Direct imports (when running from within src)
 if not modules_imported:
     try:
-        from storage.database import PaperDatabase
+        from storage.paper_db import PaperDatabase
         from embeddings.semantic_search import SemanticSearch
         from utils.config_loader import get_config, get_stage_keywords
         from utils.cost_tracker import CostTracker
@@ -79,7 +84,7 @@ if not modules_imported:
             sys.path.pop()
 
         # Now try importing
-        from storage.database import PaperDatabase
+        from storage.paper_db import PaperDatabase
         from embeddings.semantic_search import SemanticSearch
         from utils.config_loader import get_config, get_stage_keywords
         from utils.cost_tracker import CostTracker
@@ -93,6 +98,7 @@ if not modules_imported:
 if not modules_imported:
     logger.error(f"Failed to import modules. Last error: {last_error}")
     logger.error(f"Current sys.path: {sys.path}")
+    logger.error(f"Working directory: {os.getcwd()}")
     raise ImportError(f"Could not import required modules. Last error: {last_error}")
 
 
