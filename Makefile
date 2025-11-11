@@ -95,7 +95,7 @@ deploy:
 	@echo "   • Visit https://share.streamlit.io"
 	@echo "   • Click 'New app'"
 	@echo "   • Connect your GitHub repository"
-	@echo "   • Main file path: src/dashboard/app.py"
+	@echo "   • Main file path: streamlit_app.py"
 	@echo ""
 	@echo "3. Set environment variables in Streamlit Cloud:"
 	@echo "   • XAI_API_KEY (required for LLM analysis)"
