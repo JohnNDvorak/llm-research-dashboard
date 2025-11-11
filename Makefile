@@ -2,7 +2,7 @@
 # Quick commands for development, testing, and deployment
 
 .PHONY: help setup install clean test test-unit test-integration test-semantic test-quality
-.PHONY: fetch analyze embed dashboard
+.PHONY: fetch analyze embed dashboard deploy
 .PHONY: cost-report backup rebuild-vectors validate-quality
 .PHONY: lint format check
 
@@ -20,6 +20,7 @@ help:
 	@echo ""
 	@echo "Development:"
 	@echo "  make dashboard          Launch Streamlit UI (localhost:8501)"
+	@echo "  make deploy             Deploy to Streamlit Cloud (FREE)"
 	@echo "  make fetch              Fetch papers from arXiv, X (formerly Twitter), LinkedIn"
 	@echo "  make analyze            Analyze papers with LLM (uses grok-4 by default)"
 	@echo "  make embed              Generate vector embeddings"
@@ -80,6 +81,31 @@ clean:
 dashboard:
 	@echo "Launching Streamlit dashboard on http://localhost:8501"
 	@streamlit run src/dashboard/app.py
+
+## deploy: Deploy to Streamlit Cloud (FREE tier)
+deploy:
+	@echo "=== Streamlit Cloud Deployment Guide ==="
+	@echo ""
+	@echo "1. First, push to GitHub:"
+	@echo "   git add ."
+	@echo "   git commit -m 'Ready for deployment'"
+	@echo "   git push origin main"
+	@echo ""
+	@echo "2. Deploy on Streamlit Cloud:"
+	@echo "   • Visit https://share.streamlit.io"
+	@echo "   • Click 'New app'"
+	@echo "   • Connect your GitHub repository"
+	@echo "   • Main file path: src/dashboard/app.py"
+	@echo ""
+	@echo "3. Set environment variables in Streamlit Cloud:"
+	@echo "   • XAI_API_KEY (required for LLM analysis)"
+	@echo "   • OPENAI_API_KEY (required for embeddings)"
+	@echo "   • TWITTER_BEARER_TOKEN (optional)"
+	@echo "   • LINKEDIN_EMAIL (optional)"
+	@echo ""
+	@echo "✅ Your app will be live at: https://your-app.streamlit.app"
+	@echo ""
+	@echo "💡 Tip: Start with FREE tier, upgrade only when needed!"
 
 ## fetch: Fetch papers from all sources
 fetch:

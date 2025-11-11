@@ -1,0 +1,35 @@
+{
+  "name": "llm-research-dashboard",
+  "version": "1.0.0",
+  "description": "LLM Research Dashboard - Automated system for discovering, analyzing, and organizing LLM research papers",
+  "main": "src/dashboard/app.py",
+  "scripts": {
+    "start": "streamlit run src/dashboard/app.py",
+    "deploy": "streamlit run src/dashboard/app.py --server.headless true",
+    "test": "pytest",
+    "setup": "make setup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/llm-research-dashboard"
+  },
+  "keywords": [
+    "llm",
+    "research",
+    "dashboard",
+    "streamlit",
+    "machine-learning",
+    "arxiv",
+    "semantic-search"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "python": ">=3.11"
+  },
+  "streamlit": {
+    "entrypoint": "src/dashboard/app.py",
+    "python_version": "3.11",
+    "requirements_file": "requirements.txt"
+  }
+}
